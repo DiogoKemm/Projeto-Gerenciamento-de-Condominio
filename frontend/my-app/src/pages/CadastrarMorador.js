@@ -22,7 +22,12 @@ const CadastrarMorador = () => {
 				</div>
 			</div>
 			<div class="mb-3">
-				<label></label>
+				<label for="inputCPF" class="form-label">CPF</label>
+				<input type="text" class="form-control" id="inputCPF"></input>
+			</div>
+			<div class="mb-3">
+				<label for="inputTelefone" class="form-label">Nº telefone</label>
+				<input type="tel" class="form-control" id="inputTelefone"></input>
 			</div>
 
 			<button type="submit" class="btn btn-primary">Cadastrar</button>
