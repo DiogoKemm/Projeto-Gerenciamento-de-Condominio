@@ -1,5 +1,5 @@
 import React from "react";
-import ListaApartamentosTable from "../components/LIstaApartamentosTable"
+import ListaApartamentosTable from "../components/LIstaApartamentosTable";
 
 
 const ListaApartamentos = () => {

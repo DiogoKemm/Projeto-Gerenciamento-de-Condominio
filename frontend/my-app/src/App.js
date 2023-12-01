@@ -1,18 +1,20 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
+import { BrowserRouter, Routes, Route} from "react-router-dom";
 import CadastrarMorador from "./pages/CadastrarMorador";
 import ListaApartamentos from "./pages/ListaApartamentos";
-import Conflitos from "./pages/Conflitos";
+import ListaMercadorias from "./pages/ListaMercadorias";
 import './App.css';
+import Login from "./pages/LoginPage";
+import React from "react";
 
 function App() {
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route index element={<Dashboard />} />
+        <Route index element={<Login />} />
         <Route path="CadastrarMorador" element={<CadastrarMorador />} />
-        <Route path="ListaApartamentos" element={<ListaApartamentos/>}/>
-        <Route path="Conflitos" element={<Conflitos/>}/>
+        <Route path="ListaApartamentos" element={<ListaApartamentos />} />
+        <Route path="ListaMercadorias" element={<ListaMercadorias />} />
       </Routes>
     </BrowserRouter>
   );

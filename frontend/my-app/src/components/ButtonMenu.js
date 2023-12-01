@@ -10,14 +10,11 @@ function ButtonMenu() {
             <Link to="/ListaApartamentos">
             <button type="button" class="btn">Lista de apartamentos</button>
             </Link>
-            <Link to="/ListaMercadoras">
+            <Link to="/ListaMercadorias">
             <button type="button" class="btn">Lista de mercadorias</button>
             </Link>
             <Link to="/CadastrarZelador">
             <button type="button" class="btn">Cadastrar zelador</button>
-            </Link>
-            <Link to="/Conflitos">
-            <button type="button" class="btn">Conflitos</button>
             </Link>
             <Outlet/>
         </>

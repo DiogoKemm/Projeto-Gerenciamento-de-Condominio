@@ -1,34 +1,52 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 
 function ListaApartamentosTable() {
-    return (
-        <table class="table">
-  <thead>
-    <tr>
-      <th scope="col">Nº</th>
-      <th scope="col">Bloco</th>
-      <th scope="col">Morador</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>1</td>
-      <td>Fulano</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>1</td>
-      <td>Ciclano</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>1</td>
-      <td>Gugu</td>
-    </tr>
-  </tbody>
-</table>
-    )
+  const [apartamentos, setApartamentos] = useState([]);
+
+  useEffect(() => {
+
+    const fetchData = async () => {
+
+      const data = await fetch("http://localhost:8080/moradores");
+      const json = await data.json();
+      setApartamentos(json);
+
+    }
+
+    fetchData().catch(console.error);
+  }, []);
+
+  const tabelaApartamentos =
+    
+      <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Nº</th>
+          <th scope="col">Bloco</th>
+          <th scope="col">Morador</th>
+          <th scope="col">Telefone</th>
+          <th scope="col">CPF</th>
+        </tr>
+      </thead>
+      {apartamentos.map(apartamento => (
+      <tbody>
+        <tr key={apartamento.CPF}>
+          <th scope="row">{apartamento.apartamento}</th>
+          <td>{apartamento.bloco}</td>
+          <td>{apartamento.nome}</td>
+          <td>{apartamento.telefone}</td>
+          <td>{apartamento.CPF}</td>
+        </tr>
+      </tbody>
+      ))}
+    </table>
+   
+
+  return (
+    <>
+    {tabelaApartamentos}
+    </>
+  )
 }
 
 export default ListaApartamentosTable;
