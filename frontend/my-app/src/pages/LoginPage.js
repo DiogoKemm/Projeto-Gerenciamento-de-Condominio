@@ -62,12 +62,12 @@ function Login(props) {
             <form>
                 <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">Nome de usuário:</label>
-                    <input value={username} type="email" class="form-control" id="username-input"
+                    <input value={username} type="email" class="form-control" id="username"
                         aria-describedby="emailHelp" onChange={event => { setUsername(event.target.value) }} />
                 </div>
                 <div class="mb-3">
                     <label for="exampleInputPassword1" class="form-label">Senha</label>
-                    <input value={passwd} type="password" class="form-control" id="passwd-input"
+                    <input value={passwd} type="password" class="form-control" id="passwd"
                         onChange={event => { setPasswd(event.target.value) }} />
                 </div>
 

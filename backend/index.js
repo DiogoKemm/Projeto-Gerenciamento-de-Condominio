@@ -130,22 +130,22 @@ app.get("/", async (req, res) => {
    res.send("Hello :)")
 })
 
-app.get("/moradores", requireJWTAuth, async (req, res) => {
+app.get("/moradores", async (req, res) => {
    const data = await db.any('SELECT * FROM morador ORDER BY apartamento');
    res.json(data);
 });
 
-app.delete("/mercadorias/:id", requireJWTAuth, async (req, res) => {
+app.delete("/mercadorias/:id", async (req, res) => {
    const id = req.params.id;
    await db.none(`DELETE FROM mercadoria WHERE "pedido" = ${id}`);
 });
 
-app.get("/mercadorias", requireJWTAuth, async (req, res) => {
+app.get("/mercadorias", async (req, res) => {
    const data = await db.any('SELECT * from mercadoria JOIN morador ON morador."CPF" = mercadoria."CPFmorador" ORDER BY pedido');
    res.json(data);
 })
 
-app.post("/CadastrarMorador", requireJWTAuth, async (req, res) => {
+app.post("/CadastrarMorador", async (req, res) => {
    try {
       const nome = req.body.nome;
       const email = req.body.email;
@@ -165,7 +165,7 @@ app.post("/CadastrarZelador", async (req, res) => {
 
 })
 
-app.post("/CadastrarMercadoria", requireJWTAuth, async (req, res) => {
+app.post("/CadastrarMercadoria", async (req, res) => {
    try {
       const pedido = req.body.pedido;
       const cpf = req.body.cpf;

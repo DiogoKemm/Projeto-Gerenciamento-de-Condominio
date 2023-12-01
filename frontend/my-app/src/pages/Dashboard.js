@@ -1,4 +1,5 @@
 import React from "react";
+import Login from "./LoginPage";
 import ButtonMenu from "../components/ButtonMenu";
 
 const Dashboard = () => {
@@ -23,9 +24,7 @@ const Dashboard = () => {
     };
     return (
         <>
-        {isLoggedIn ? (
        <ButtonMenu/>
-        ) : (<Login onLogin={handleLogin}/>)}
         </>
     )
 };
