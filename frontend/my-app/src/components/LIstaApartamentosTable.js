@@ -7,7 +7,13 @@ function ListaApartamentosTable() {
 
     const fetchData = async () => {
 
-      const data = await fetch("http://localhost:8080/moradores");
+      const token = localStorage.getItem("token");
+
+      const data = await fetch("http://localhost:8080/moradores", {
+        headers: {
+					Authorization: `bearer ${token}`,
+				},
+      });
       const json = await data.json();
       setApartamentos(json);
 

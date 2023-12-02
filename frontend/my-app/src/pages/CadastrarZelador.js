@@ -15,7 +15,12 @@ const CadastrarMorador = () => {
 			const form = e.target;
 			const formData = new FormData(form);
 
-			fetch('http://localhost:8080/CadastrarZelador/', {
+			const token = localStorage.getItem("token");
+
+			fetch('http://localhost:8080/novoUsuario/', {
+				headers: {
+					Authorization: `bearer ${token}`,
+				},
 				method: form.method,
 				body: formData
 			});
@@ -35,7 +40,7 @@ const CadastrarMorador = () => {
 			</div>
 			<div class="mb-3">
 				<label for="inputEmail" class="form-label">E-mail</label>
-				<input type="email" name="email" class="form-control" id="inputEmail" onChange={handleChange} />
+				<input type="email" name="email" class="form-control" id="email" onChange={handleChange} />
 			</div>
 			<div class="mb-3">
 				<label for="inputCPF" class="form-label">CPF</label>
@@ -47,7 +52,7 @@ const CadastrarMorador = () => {
 			</div>
             <div class="mb-3">
                 <label for="senha" class="form-label">Senha</label>
-                <input type="password" name="senha" class="form-control" id="senha" onChange={handleChange}></input>
+                <input type="password" name="passwd" class="form-control" id="passwd" onChange={handleChange}></input>
             </div>
 
 			<button type="submit" class="btn btn-primary">Cadastrar</button>

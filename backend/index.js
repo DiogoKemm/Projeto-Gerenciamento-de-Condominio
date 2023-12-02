@@ -80,6 +80,31 @@ passport.use(
 	),
 );
 
+passport.use(
+	new JwtStrategy(
+		{
+			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+			secretOrKey: "your-secret-key",
+		},
+		async (payload, done) => {
+			try {
+				const user = await db.oneOrNone(
+					"SELECT * FROM users WHERE user_id = $1;",
+					[payload.username],
+				);
+
+				if (user) {
+					done(null, user);
+				} else {
+					done(null, false);
+				}
+			} catch (error) {
+				done(error, false);
+			}
+		},
+	),
+);
+
 passport.serializeUser(function (user, cb) {
 	process.nextTick(function () {
 		return cb(null, {
@@ -99,7 +124,7 @@ const requireJWTAuth = passport.authenticate("jwt", { session: false });
 
 app.post("/login", passport.authenticate("local", { session: false }), (req, res) => {
 		// Cria o token JWT
-      console.log(req.body.username);
+      	console.log(req.body.username);
 		const token = jwt.sign({ username: req.body.username }, "your-secret-key", {
 			expiresIn: "1h",
 		});
@@ -130,22 +155,22 @@ app.get("/", async (req, res) => {
    res.send("Hello :)")
 })
 
-app.get("/moradores", async (req, res) => {
+app.get("/moradores", requireJWTAuth, async (req, res) => {
    const data = await db.any('SELECT * FROM morador ORDER BY apartamento');
    res.json(data);
 });
 
-app.delete("/mercadorias/:id", async (req, res) => {
+app.delete("/mercadorias/:id", requireJWTAuth, async (req, res) => {
    const id = req.params.id;
    await db.none(`DELETE FROM mercadoria WHERE "pedido" = ${id}`);
 });
 
-app.get("/mercadorias", async (req, res) => {
+app.get("/mercadorias", requireJWTAuth, async (req, res) => {
    const data = await db.any('SELECT * from mercadoria JOIN morador ON morador."CPF" = mercadoria."CPFmorador" ORDER BY pedido');
    res.json(data);
 })
 
-app.post("/CadastrarMorador", async (req, res) => {
+app.post("/CadastrarMorador", requireJWTAuth, async (req, res) => {
    try {
       const nome = req.body.nome;
       const email = req.body.email;
@@ -161,11 +186,7 @@ app.post("/CadastrarMorador", async (req, res) => {
    }
 });
 
-app.post("/CadastrarZelador", async (req, res) => {
-
-})
-
-app.post("/CadastrarMercadoria", async (req, res) => {
+app.post("/CadastrarMercadoria", requireJWTAuth, async (req, res) => {
    try {
       const pedido = req.body.pedido;
       const cpf = req.body.cpf;
@@ -188,6 +209,28 @@ app.post("/CadastrarMercadoria", async (req, res) => {
       console.log(error);
    }
 
+});
+
+app.post("/novoUsuario", requireJWTAuth, async (req, res) => {
+	const saltRounds = 10;
+	try {
+		const userEmail = req.body.email;
+		console.log(userEmail);
+		const userPasswd = req.body.passwd.toString();
+		console.log(userPasswd);
+		const salt = bcrypt.genSaltSync(saltRounds);
+		const hashedPasswd = bcrypt.hashSync(userPasswd, salt);
+
+		console.log(`Email: ${userEmail} - Passwd: ${hashedPasswd}`);
+		db.none("INSERT INTO users (user_id, user_password) VALUES ($1, $2);", [
+			userEmail,
+			hashedPasswd,
+		]);
+		res.sendStatus(200);
+	} catch (error) {
+		console.log(error);
+		res.sendStatus(400);
+	}
 });
 
 app.listen(8080, () => console.log('API is running on http://localhost:8080/'));

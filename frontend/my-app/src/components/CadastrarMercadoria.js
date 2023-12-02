@@ -16,7 +16,12 @@ function CadastrarMercadoria() {
 			const form = e.target;
 			const formData = new FormData(form);
 
+			const token = localStorage.getItem("token");
+
 			fetch('http://localhost:8080/CadastrarMercadoria/', {
+				headers: {
+					Authorization: `bearer ${token}`,
+				},
 				method: form.method,
 				body: formData
 			});

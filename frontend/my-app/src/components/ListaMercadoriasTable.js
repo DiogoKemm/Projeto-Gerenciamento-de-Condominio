@@ -7,7 +7,13 @@ function ListaMercadoriasTable() {
 
     const fetchData = async () => {
 
-      const data = await fetch("http://localhost:8080/mercadorias");
+      const token = localStorage.getItem("token");
+
+      const data = await fetch("http://localhost:8080/mercadorias", {
+        headers: {
+					Authorization: `bearer ${token}`,
+				},
+      });
       const json = await data.json();
       setMercadorias(json);
 
@@ -17,7 +23,11 @@ function ListaMercadoriasTable() {
   }, [mercadorias]);
 
   const handleClick = id => {
+    const token = localStorage.getItem("token");
     fetch(`http://localhost:8080/mercadorias/${id}`, {
+      headers: {
+        Authorization: `bearer ${token}`,
+      },
       method: "DELETE"
     })
     .then(response => response.json(id));

@@ -1,8 +1,14 @@
 import React from "react";
+import axios from "axios";
 import {
-    Alert,
-    Snackbar
+	Alert,
+	Box,
+	Button,
+	Snackbar,
+	Stack,
+	TextField,
 } from "@mui/material";
+
 
 function Login(props) {
 
@@ -16,11 +22,10 @@ function Login(props) {
     async function enviaLogin(event) {
         event.preventDefault();
         try {
-            const response = await fetch('http://localhost:8080/login', {
-                method: "POST",
-                username: username,
-                password: passwd
-            });
+            const response = await axios.post("/login", {
+				username: username,
+				password: passwd,
+			});
 
             console.log(response);
             if (response.status >= 200 && response.status < 300) {
@@ -58,36 +63,69 @@ function Login(props) {
     }
 
     return (
-        <>
-            <form>
-                <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">Nome de usuário:</label>
-                    <input value={username} type="email" class="form-control" id="username"
-                        aria-describedby="emailHelp" onChange={event => { setUsername(event.target.value) }} />
-                </div>
-                <div class="mb-3">
-                    <label for="exampleInputPassword1" class="form-label">Senha</label>
-                    <input value={passwd} type="password" class="form-control" id="passwd"
-                        onChange={event => { setPasswd(event.target.value) }} />
-                </div>
-
-                <button onClick={enviaLogin} type="submit" class="btn btn-primary">Enviar</button>
-                <button onClick={cancelaLogin} type="btn" class="btn btn-primary">Cancelar</button>
-
-            </form>
-            <Snackbar
-                open={openMessage}
-                autoHideDuration={6000}
-                onClose={handleCloseMessage}
-            >
-                <Alert
-                    severity={messageSeverity}
-                    onClose={handleCloseMessage}
-                >
-                    {messageText}
-                </Alert>
-            </Snackbar>
-        </>
+        <Box style={{maxWidth: '300px'}}>
+			<Stack spacing={2}>
+				<Stack spacing={2}>
+					<TextField
+						required
+						id="username-input"
+						label="User: "
+						size="small"
+						value={username}
+						onChange={(event) => {
+							setUsername(event.target.value);
+						}}
+					/>
+					<TextField
+						required
+						id="passwd-input"
+						label="Password: "
+						type="password"
+						size="small"
+						value={passwd}
+						onChange={(event) => {
+							setPasswd(event.target.value);
+						}}
+					/>
+				</Stack>
+				<Stack direction="row" spacing={3}>
+					<Button
+						variant="contained"
+						style={{
+							maxWidth: "100px",
+							minWidth: "100px",
+						}}
+						color="primary"
+						onClick={enviaLogin}
+					>
+						Enviar
+					</Button>
+					<Button
+						variant="outlined"
+						style={{
+							maxWidth: "100px",
+							minWidth: "100px",
+						}}
+						color="error"
+						onClick={cancelaLogin}
+					>
+						Cancelar
+					</Button>
+				</Stack>
+				<Snackbar
+					open={openMessage}
+					autoHideDuration={6000}
+					onClose={handleCloseMessage}
+				>
+					<Alert
+						severity={messageSeverity}
+						onClose={handleCloseMessage}
+					>
+						{messageText}
+					</Alert>
+				</Snackbar>
+			</Stack>
+		</Box>
     );
 
 }
