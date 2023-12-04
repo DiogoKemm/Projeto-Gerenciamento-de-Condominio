@@ -28,7 +28,7 @@ const CadastrarMorador = () => {
 			console.log(formData);
 
 		} else {
-			alert("Preencha todos os campos!");
+			alert(`Preencha todos os campos!`);
 		}
 	};
 

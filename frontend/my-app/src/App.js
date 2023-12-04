@@ -74,6 +74,10 @@ function App() {
                   element={<Login onLogin={handleLogin} />}
                 />
                 <Route
+                path="/"
+                element={"Bem vindo!"}
+                />
+                <Route
                   path="CadastrarMorador"
                   element={<CadastrarMorador />}
                 />
@@ -89,7 +93,6 @@ function App() {
                   path="CadastrarZelador"
                   element={<CadastrarZelador />}
                 />
-                <Route></Route>
               </Routes>
             </Grid>
           </Grid>

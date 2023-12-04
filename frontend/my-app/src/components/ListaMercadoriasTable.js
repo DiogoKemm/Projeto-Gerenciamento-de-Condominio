@@ -49,12 +49,12 @@ function ListaMercadoriasTable() {
       {mercadorias.map(mercadoria => (
         <tbody>
           <tr key={mercadoria.pedido}>
-            <th scope="row">{mercadoria.pedido}</th>
+            <th scope="row">{mercadoria.nota_fiscal}</th>
             <th>{mercadoria.apartamento}</th>
             <td>{mercadoria.bloco}</td>
             <td>{mercadoria.nome}</td>
             <td>{mercadoria.telefone}</td>
-            <td><button onClick={() => handleClick(mercadoria.pedido)}>Deletar</button></td>
+            <td><button onClick={() => handleClick(mercadoria.nota_fiscal)}>Deletar</button></td>
           </tr>
         </tbody>
       ))}

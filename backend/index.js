@@ -30,12 +30,12 @@ app.use(upload.array());
 app.use(express.static('public'));
 
 app.use(
-   session({
-      secret: 'Super_secret',
-      resave: false,
-      saveUninitialized: false,
-      cookie: { secure: true },
-   }),
+	session({
+		secret: 'Super_secret',
+		resave: false,
+		saveUninitialized: false,
+		cookie: { secure: true },
+	}),
 );
 app.use(passport.initialize());
 app.use(passport.session());
@@ -122,15 +122,23 @@ passport.deserializeUser(function (user, cb) {
 
 const requireJWTAuth = passport.authenticate("jwt", { session: false });
 
-app.post("/login", passport.authenticate("local", { session: false }), (req, res) => {
-		// Cria o token JWT
-      	console.log(req.body.username);
-		const token = jwt.sign({ username: req.body.username }, "your-secret-key", {
-			expiresIn: "1h",
-		});
+const transporter = nodemailer.createTransport({
+	service: 'gmail',
+	auth: {
+		user: 'diogogarmerich@gmail.com',
+		pass: 'hetg yfcg qjwp xtsj '
+	}
+});
 
-		res.json({ message: "Login successful", token: token });
-	},
+app.post("/login", passport.authenticate("local", { session: false }), (req, res) => {
+	// Cria o token JWT
+	console.log(req.body.username);
+	const token = jwt.sign({ username: req.body.username }, "your-secret-key", {
+		expiresIn: "1h",
+	});
+
+	res.json({ message: "Login successful", token: token });
+},
 );
 
 app.post("/logout", function (req, res, next) {
@@ -142,72 +150,59 @@ app.post("/logout", function (req, res, next) {
 	});
 });
 
-
-const transporter = nodemailer.createTransport({
-   service: 'gmail',
-   auth: {
-      user: 'diogogarmerich@gmail.com',
-      pass: 'hetg yfcg qjwp xtsj '
-   }
-});
-
-app.get("/", async (req, res) => {
-   res.send("Hello :)")
-})
-
 app.get("/moradores", requireJWTAuth, async (req, res) => {
-   const data = await db.any('SELECT * FROM morador ORDER BY apartamento');
-   res.json(data);
+	const data = await db.any('SELECT * FROM morador ORDER BY apartamento');
+	res.json(data);
 });
 
 app.delete("/mercadorias/:id", requireJWTAuth, async (req, res) => {
-   const id = req.params.id;
-   await db.none(`DELETE FROM mercadoria WHERE "pedido" = ${id}`);
+	const id = req.params.id;
+	await db.none(`DELETE FROM mercadoria WHERE nota_fiscal = ${id}`);
 });
 
 app.get("/mercadorias", requireJWTAuth, async (req, res) => {
-   const data = await db.any('SELECT * from mercadoria JOIN morador ON morador."CPF" = mercadoria."CPFmorador" ORDER BY pedido');
-   res.json(data);
+	const data = await db.any('SELECT * from mercadoria JOIN morador ON morador.cpf = mercadoria.cpf ORDER BY nota_fiscal');
+	res.json(data);
 })
 
 app.post("/CadastrarMorador", requireJWTAuth, async (req, res) => {
-   try {
-      const nome = req.body.nome;
-      const email = req.body.email;
-      const apartamento = req.body.apartamento;
-      const bloco = req.body.bloco;
-      const cpf = req.body.cpf;
-      const telefone = req.body.telefone;
+	try {
+		const nome = req.body.nome;
+		const email = req.body.email;
+		const apartamento = req.body.apartamento;
+		const bloco = req.body.bloco;
+		const cpf = req.body.cpf;
+		const telefone = req.body.telefone;
 
-      db.none('INSERT INTO morador("CPF", "nome", "telefone", "apartamento", "bloco", "email") VALUES($1, $2, $3, $4, $5, $6)', [cpf, nome, telefone, apartamento, bloco, email]);
-   }
-   catch {
-      console.log(error);
-   }
+		db.none('INSERT INTO morador(CPF, nome, telefone, apartamento, bloco, email) VALUES($1, $2, $3, $4, $5, $6)', [cpf, nome, telefone, apartamento, bloco, email]);
+	}
+	catch {
+		console.log(error);
+	}
 });
 
 app.post("/CadastrarMercadoria", requireJWTAuth, async (req, res) => {
-   try {
-      const pedido = req.body.pedido;
-      const cpf = req.body.cpf;
-      const email = await db.any('SELECT "email" FROM morador JOIN mercadoria ON mercadoria."CPFmorador"=morador."CPF" WHERE "CPF" = $1', [cpf]);
-      db.none('INSERT INTO mercadoria("pedido", "CPFmorador") VALUES ($1, $2)', [pedido, cpf])
-      let message = {
-         from: "diogogarmerich@gmail.com",
-         to: email[0].email,
-         subject: "Você tem um pacote na portaria!",
-         text: `Seu pedido de nota fiscal ${pedido} chegou! Por favor, vá retirá-lo`
-      };
-      transporter.sendMail(message, function (error, info) {
-         if (error) {
-            console.log(error);
-         } else {
-            console.log("email sent! " + info.response);
-         }
-      })
-   } catch {
-      console.log(error);
-   }
+	try {
+		const pedido = req.body.pedido;
+		const cpf = req.body.cpf;
+		db.none('INSERT INTO mercadoria(nota_fiscal, cpf VALUES ($1, $2)', [pedido, cpf])
+		const email = await db.any('SELECT morador.email FROM morador JOIN mercadoria ON mercadoria.cpf=morador.cpf WHERE cpf = $1', [cpf]);
+		let message = {
+			from: "diogogarmerich@gmail.com",
+			to: email[0].email,
+			subject: "Você tem um pacote na portaria!",
+			text: `Seu pedido de nota fiscal ${pedido} chegou! Por favor, vá retirá-lo na portaria.`
+		};
+		transporter.sendMail(message, function (error, info) {
+			if (error) {
+				console.log(error);
+			} else {
+				console.log("email sent! " + info.response);
+			}
+		})
+	} catch (error) {
+		console.log(error);
+	}
 
 });
 
