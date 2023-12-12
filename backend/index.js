@@ -151,7 +151,7 @@ app.post("/logout", function (req, res, next) {
 });
 
 app.get("/moradores", requireJWTAuth, async (req, res) => {
-	const data = await db.any('SELECT * FROM morador ORDER BY apartamento');
+	const data = await db.any('SELECT a.numero, a.bloco, m.nome, m.cpf, m.telefone FROM apartamento a LEFT JOIN morador m ON a.morador=m.cpf ORDER BY numero');
 	res.json(data);
 });
 
@@ -161,7 +161,7 @@ app.delete("/mercadorias/:id", requireJWTAuth, async (req, res) => {
 });
 
 app.get("/mercadorias", requireJWTAuth, async (req, res) => {
-	const data = await db.any('SELECT * from mercadoria JOIN morador ON morador.cpf = mercadoria.cpf ORDER BY nota_fiscal');
+	const data = await db.any('SELECT mo.nome, mo.telefone, me.nota_fiscal, a.numero, a.bloco FROM mercadoria me JOIN morador mo ON mo.cpf = me.cpf JOIN apartamento a ON mo.cpf=a.morador ORDER BY nota_fiscal');
 	res.json(data);
 })
 
@@ -169,24 +169,36 @@ app.post("/CadastrarMorador", requireJWTAuth, async (req, res) => {
 	try {
 		const nome = req.body.nome;
 		const email = req.body.email;
-		const apartamento = req.body.apartamento;
-		const bloco = req.body.bloco;
 		const cpf = req.body.cpf;
 		const telefone = req.body.telefone;
+		const apartamento = req.body.apartamento;
 
-		db.none('INSERT INTO morador(CPF, nome, telefone, apartamento, bloco, email) VALUES($1, $2, $3, $4, $5, $6)', [cpf, nome, telefone, apartamento, bloco, email]);
+		db.none('INSERT INTO morador(CPF, nome, telefone, email) VALUES($1, $2, $3, $4)', [cpf, nome, telefone, email]);
+		db.none('UPDATE apartamento SET morador = $1 WHERE numero = $2', [cpf, apartamento]);
 	}
-	catch {
+	catch (error) {
 		console.log(error);
 	}
 });
+
+app.post("/CadastrarApartamento", requireJWTAuth, async (req, res) => {
+	try {
+		const numero = req.body.nAP;
+		const bloco = req.body.nBloco;
+		db.none('INSERT INTO apartamento(numero, bloco) VALUES ($1, $2)', [numero, bloco]);
+	}
+	catch (error) {
+		console.log(error);
+	}
+})
 
 app.post("/CadastrarMercadoria", requireJWTAuth, async (req, res) => {
 	try {
 		const pedido = req.body.pedido;
 		const cpf = req.body.cpf;
-		db.none('INSERT INTO mercadoria(nota_fiscal, cpf VALUES ($1, $2)', [pedido, cpf])
-		const email = await db.any('SELECT morador.email FROM morador JOIN mercadoria ON mercadoria.cpf=morador.cpf WHERE cpf = $1', [cpf]);
+		await db.none('INSERT INTO mercadoria(nota_fiscal, cpf) VALUES ($1, $2)', [pedido, cpf]);
+		const email = await db.any('SELECT morador.email FROM morador NATURAL JOIN mercadoria WHERE morador.cpf = $1', [cpf]);
+		console.log(email[0].email);
 		let message = {
 			from: "diogogarmerich@gmail.com",
 			to: email[0].email,

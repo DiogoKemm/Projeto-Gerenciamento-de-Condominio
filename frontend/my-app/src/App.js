@@ -5,18 +5,14 @@ import Login from "./pages/LoginPage";
 import CadastrarMorador from "./pages/CadastrarMorador";
 import CadastrarZelador from "./pages/CadastrarZelador";
 import ListaApartamentos from "./pages/ListaApartamentos";
-import ListaMercadoriasTable from "./components/ListaMercadoriasTable";
 import ListaMercadorias from "./pages/ListaMercadorias";
 import './App.css';
 import {
   Box,
   Button,
   Container,
-  CssBaseline,
-  Grid,
-  Stack,
+  Grid
 } from "@mui/material";
-import ListaApartamentosTable from "./components/LIstaApartamentosTable";
 
 axios.defaults.baseURL = "http://localhost:8080/";
 axios.defaults.headers.common["Content-Type"] =
@@ -87,7 +83,7 @@ function App() {
                 />
                 <Route
                   path="ListaApartamentos"
-                  element={<ListaApartamentosTable />}
+                  element={<ListaApartamentos />}
                 />
                 <Route
                   path="CadastrarZelador"

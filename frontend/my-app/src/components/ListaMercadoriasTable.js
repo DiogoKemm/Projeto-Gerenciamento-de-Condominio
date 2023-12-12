@@ -50,7 +50,7 @@ function ListaMercadoriasTable() {
         <tbody>
           <tr key={mercadoria.pedido}>
             <th scope="row">{mercadoria.nota_fiscal}</th>
-            <th>{mercadoria.apartamento}</th>
+            <th>{mercadoria.numero}</th>
             <td>{mercadoria.bloco}</td>
             <td>{mercadoria.nome}</td>
             <td>{mercadoria.telefone}</td>

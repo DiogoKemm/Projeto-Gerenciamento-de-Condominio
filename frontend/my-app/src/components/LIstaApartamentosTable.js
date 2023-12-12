@@ -37,7 +37,7 @@ function ListaApartamentosTable() {
       {apartamentos.map(apartamento => (
       <tbody>
         <tr key={apartamento.cpf}>
-          <th scope="row">{apartamento.apartamento}</th>
+          <th scope="row">{apartamento.numero}</th>
           <td>{apartamento.bloco}</td>
           <td>{apartamento.nome}</td>
           <td>{apartamento.telefone}</td>
