@@ -173,7 +173,7 @@ app.post("/CadastrarMorador", requireJWTAuth, async (req, res) => {
 		const telefone = req.body.telefone;
 		const apartamento = req.body.apartamento;
 
-		db.none('INSERT INTO morador(CPF, nome, telefone, email) VALUES($1, $2, $3, $4)', [cpf, nome, telefone, email]);
+		await db.none('INSERT INTO morador(CPF, nome, telefone, email) VALUES($1, $2, $3, $4)', [cpf, nome, telefone, email]);
 		db.none('UPDATE apartamento SET morador = $1 WHERE numero = $2', [cpf, apartamento]);
 	}
 	catch (error) {
