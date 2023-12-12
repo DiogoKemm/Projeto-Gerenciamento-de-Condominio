@@ -63,7 +63,7 @@ function Login(props) {
     }
 
     return (
-        <Box style={{maxWidth: '300px'}}>
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
 			<Stack spacing={2}>
 				<Stack spacing={2}>
 					<TextField
