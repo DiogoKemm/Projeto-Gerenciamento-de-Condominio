@@ -155,6 +155,12 @@ app.get("/moradores", requireJWTAuth, async (req, res) => {
 	res.json(data);
 });
 
+app.delete("/moradores/:id", requireJWTAuth, async (req, res) => {
+	const id = req.params.id;
+	console.log(id);
+	await db.none(`DELETE FROM morador WHERE cpf = '${id}'`);
+});
+
 app.delete("/mercadorias/:id", requireJWTAuth, async (req, res) => {
 	const id = req.params.id;
 	await db.none(`DELETE FROM mercadoria WHERE nota_fiscal = ${id}`);

@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 function ListaApartamentosTable() {
   const [apartamentos, setApartamentos] = useState([]);
 
+
+
   useEffect(() => {
 
     const fetchData = async () => {
@@ -22,6 +24,17 @@ function ListaApartamentosTable() {
     fetchData().catch(console.error);
   }, [apartamentos]);
 
+  function handleClick(id) {
+    const token = localStorage.getItem("token");
+    fetch(`http://localhost:8080/moradores/${id}`, {
+      headers: {
+        Authorization: `bearer ${token}`,
+      },
+      method: "DELETE"
+    })
+      .then(response => response.json(id));
+  }
+
   const tabelaApartamentos =
 
     <table class="table">
@@ -32,6 +45,7 @@ function ListaApartamentosTable() {
           <th scope="col">Morador</th>
           <th scope="col">Telefone</th>
           <th scope="col">CPF</th>
+          <th scope="col">Remover morador?</th>
         </tr>
       </thead>
       {apartamentos.map(apartamento => (
@@ -42,6 +56,7 @@ function ListaApartamentosTable() {
             <td>{apartamento.nome}</td>
             <td>{apartamento.telefone}</td>
             <td>{apartamento.cpf}</td>
+            <td><button onClick={() => handleClick(apartamento.cpf)}>Remover</button></td>
           </tr>
         </tbody>
       ))}

@@ -71,7 +71,7 @@ function App() {
                 />
                 <Route
                 path="/"
-                element={"Bem vindo!"}
+                element={"\nBem vindo!"}
                 />
                 <Route
                   path="CadastrarMorador"
