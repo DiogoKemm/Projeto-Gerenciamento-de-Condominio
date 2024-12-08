@@ -1,3 +1,7 @@
+CREATE DATABASE condominio;
+
+\c condominio;
+
 CREATE TABLE IF NOT EXISTS apartamento
 (
     numero integer NOT NULL,
