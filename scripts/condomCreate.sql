@@ -28,8 +28,10 @@ CREATE TABLE IF NOT EXISTS mercadoria
     descricao character varying(255) COLLATE pg_catalog."default" NOT NULL,
     data_rec date NOT NULL,
     data_ent date,
+    "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    CONSTRAINT mercadoria_pkey PRIMARY KEY ("ID"),
     CONSTRAINT mercadoria_cpf_morador_fkey FOREIGN KEY (cpf_morador)
-        REFERENCES morador (cpf) MATCH SIMPLE
+        REFERENCES public.morador (cpf) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
