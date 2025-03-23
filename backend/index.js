@@ -131,12 +131,12 @@ const transporter = nodemailer.createTransport({
 });
 
 const requireSindico = (req, res, next) => {
-    // Verifique se o usuário está autenticado e tem a role 'Sindico'
-    if (req.user.role === 'Sindico') {
-        next(); // Permite o acesso
-    } else {
-        res.status(403).json({ message: "Acesso negado. Somente o síndico pode acessar esta página." });
-    }
+	// Verifique se o usuário está autenticado e tem a role 'Sindico'
+	if (req.user.role === 'Sindico') {
+		next(); // Permite o acesso
+	} else {
+		res.status(403).json({ message: "Acesso negado. Somente o síndico pode acessar esta página." });
+	}
 };
 
 app.post("/login", passport.authenticate("local", { session: false }), (req, res) => {
@@ -150,7 +150,7 @@ app.post("/login", passport.authenticate("local", { session: false }), (req, res
 );
 
 app.get("/", (req, res) => {
-    res.send("Welcome to the Condominio API!");
+	res.send("Welcome to the Condominio API!");
 });
 
 app.post("/logout", function (req, res, next) {
@@ -162,24 +162,46 @@ app.post("/logout", function (req, res, next) {
 	});
 });
 
-app.get("/moradores",  async (req, res) => {
-    const data = await db.any('SELECT * FROM morador m JOIN apartamento a ON a.numero = m.ap_num AND a.bloco = m.ap_bloco ORDER BY nome');	
+app.get("/moradores", async (req, res) => {
+	const data = await db.any('SELECT * FROM morador m JOIN apartamento a ON a.numero = m.ap_num AND a.bloco = m.ap_bloco ORDER BY nome');
 	res.json(data);
 });
 
-app.delete("/moradores/:id",  async (req, res) => {
+app.delete("/moradores/:id", async (req, res) => {
 	const id = req.params.id;
-    await db.none('DELETE FROM morador WHERE cpf = $1', [id]);
-    res.sendStatus(200);
+	try {
+        await db.tx(async t => {
+            // Primeiro deleta as mercadorias associadas
+            await t.none(
+                'DELETE FROM mercadoria WHERE cpf_morador = $1', 
+                [id]
+            );
+            
+            // Depois deleta o morador
+            await t.none(
+                'DELETE FROM morador WHERE cpf = $1', 
+                [id]
+            );
+        });
+        
+        res.sendStatus(200);
+    } catch (error) {
+        console.error('Erro ao deletar morador:', error);
+        res.status(500).json({ 
+            error: "Erro ao deletar morador", 
+            details: error.message 
+        });
+    }
+
 });
 
 app.delete("/mercadorias/:id", async (req, res) => {
 	const id = req.params.id;
-    await db.none('DELETE FROM mercadoria WHERE "ID" = $1', [id]);
-    res.sendStatus(200);
+	await db.none('DELETE FROM mercadoria WHERE "ID" = $1', [id]);
+	res.sendStatus(200);
 });
 
-app.get("/mercadorias",  async (req, res) => {
+app.get("/mercadorias", async (req, res) => {
 	const data = await db.any(`
         SELECT 
             m.nome, 
@@ -195,25 +217,25 @@ app.get("/mercadorias",  async (req, res) => {
         JOIN apartamento a ON m.ap_num = a.numero AND m.ap_bloco = a.bloco
         ORDER BY me.data_rec DESC
     `);
-    res.json(data);
+	res.json(data);
 })
 
-app.post("/CadastrarMorador",  async (req, res) => {
+app.post("/CadastrarMorador", async (req, res) => {
 	try {
-        const { nome, email, cpf, telefone, apartamento, bloco, papel } = req.body;
-        
-        await db.none(
-            'INSERT INTO morador(cpf, nome, email, telefone, ap_num, ap_bloco, papel) VALUES ($1, $2, $3, $4, $5, $6, $7)',
-            [cpf, nome, email, telefone, apartamento, bloco, papel]
-        );
-        res.sendStatus(201);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Erro ao cadastrar morador" });
-    }
+		const { nome, email, cpf, telefone, apartamento, bloco, papel } = req.body;
+
+		await db.none(
+			'INSERT INTO morador(cpf, nome, email, telefone, ap_num, ap_bloco, papel) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+			[cpf, nome, email, telefone, apartamento, bloco, papel]
+		);
+		res.sendStatus(201);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ error: "Erro ao cadastrar morador" });
+	}
 });
 
-app.post("/CadastrarApartamento",  async (req, res) => {
+app.post("/CadastrarApartamento", async (req, res) => {
 	try {
 		const numero = req.body.nAP;
 		const bloco = req.body.nBloco;
@@ -224,35 +246,35 @@ app.post("/CadastrarApartamento",  async (req, res) => {
 	}
 })
 
-app.post("/CadastrarMercadoria",  async (req, res) => {
+app.post("/CadastrarMercadoria", async (req, res) => {
 	try {
-        const { cpf_morador, descricao } = req.body;
-        
-        await db.none(
-            'INSERT INTO mercadoria(cpf_morador, descricao, data_rec) VALUES ($1, $2, CURRENT_DATE)',
-            [cpf_morador, descricao]
-        );
-        
-        // Obter email do morador
-        const morador = await db.one(
-            'SELECT email FROM morador WHERE cpf = $1',
-            [cpf_morador]
-        );
-        
-        // Enviar email
-        const message = {
-            from: "diogogarmerich@gmail.com",
-            to: morador.email,
-            subject: "Você tem um pacote na portaria!",
-            text: `Sua encomenda "${descricao}" foi registrada. Data de recebimento: ${new Date().toLocaleDateString()}`
-        };
-        
-        transporter.sendMail(message);
-        res.sendStatus(201);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Erro ao registrar mercadoria" });
-    }
+		const { cpf_morador, descricao } = req.body;
+
+		await db.none(
+			'INSERT INTO mercadoria(cpf_morador, descricao, data_rec) VALUES ($1, $2, CURRENT_DATE)',
+			[cpf_morador, descricao]
+		);
+
+		// Obter email do morador
+		const morador = await db.one(
+			'SELECT email FROM morador WHERE cpf = $1',
+			[cpf_morador]
+		);
+
+		// Enviar email
+		const message = {
+			from: "diogogarmerich@gmail.com",
+			to: morador.email,
+			subject: "Você tem um pacote na portaria!",
+			text: `Sua encomenda "${descricao}" foi registrada. Data de recebimento: ${new Date().toLocaleDateString()}`
+		};
+
+		transporter.sendMail(message);
+		res.sendStatus(201);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ error: "Erro ao registrar mercadoria" });
+	}
 
 });
 
