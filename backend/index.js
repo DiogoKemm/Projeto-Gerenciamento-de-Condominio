@@ -162,12 +162,12 @@ app.post("/logout", function (req, res, next) {
 	});
 });
 
-app.get("/moradores", async (req, res) => {
+app.get("/moradores", requireJWTAuth, async (req, res) => {
 	const data = await db.any('SELECT * FROM morador m JOIN apartamento a ON a.numero = m.ap_num AND a.bloco = m.ap_bloco ORDER BY nome');
 	res.json(data);
 });
 
-app.delete("/moradores/:id", async (req, res) => {
+app.delete("/moradores/:id", requireJWTAuth, async (req, res) => {
 	const id = req.params.id;
 	try {
         await db.tx(async t => {
@@ -195,13 +195,13 @@ app.delete("/moradores/:id", async (req, res) => {
 
 });
 
-app.delete("/mercadorias/:id", async (req, res) => {
+app.delete("/mercadorias/:id", requireJWTAuth, async (req, res) => {
 	const id = req.params.id;
 	await db.none('DELETE FROM mercadoria WHERE "ID" = $1', [id]);
 	res.sendStatus(200);
 });
 
-app.get("/mercadorias", async (req, res) => {
+app.get("/mercadorias", requireJWTAuth, async (req, res) => {
 	const data = await db.any(`
         SELECT 
             m.nome, 
@@ -220,7 +220,7 @@ app.get("/mercadorias", async (req, res) => {
 	res.json(data);
 })
 
-app.post("/CadastrarMorador", async (req, res) => {
+app.post("/CadastrarMorador", requireJWTAuth, async (req, res) => {
 	try {
 		const { nome, email, cpf, telefone, apartamento, bloco, papel } = req.body;
 
@@ -235,7 +235,7 @@ app.post("/CadastrarMorador", async (req, res) => {
 	}
 });
 
-app.post("/CadastrarApartamento", async (req, res) => {
+app.post("/CadastrarApartamento", requireJWTAuth, async (req, res) => {
 	try {
 		const numero = req.body.nAP;
 		const bloco = req.body.nBloco;
@@ -246,7 +246,7 @@ app.post("/CadastrarApartamento", async (req, res) => {
 	}
 })
 
-app.post("/CadastrarMercadoria", async (req, res) => {
+app.post("/CadastrarMercadoria", requireJWTAuth, async (req, res) => {
 	try {
 		const { cpf_morador, descricao } = req.body;
 
