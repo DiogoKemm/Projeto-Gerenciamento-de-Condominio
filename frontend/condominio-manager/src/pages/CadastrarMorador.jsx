@@ -6,11 +6,10 @@ const CadastrarMorador = () => {
 	function handleClick(e) {
 		e.preventDefault();
 
-
 		const form = e.target;
 		const formData = new FormData(form);
 
-		let i = 0;
+		let i = 0.
 
 		for (const value of formData.values()) {
 			if (value === '') {
@@ -24,7 +23,7 @@ const CadastrarMorador = () => {
 
 			const token = localStorage.getItem("token");
 
-			fetch('http://localhost:8080/novoUsuario/', {
+			fetch('http://localhost:8080/CadastrarMorador/', {
 				headers: {
 					Authorization: `bearer ${token}`,
 				},
@@ -33,32 +32,34 @@ const CadastrarMorador = () => {
 			});
 		}
 
-
-
 	};
 
 	return (
-		<Box display="flex" justifyContent="center" alignItems="center" flexDirection="column" marginTop="50px">
-			<form id="zeladorForm" method='post' onSubmit={handleClick}>
+		<Box display="flex" justifyContent="center" alignItems="center" marginTop="50px">
+			<form id="moradorForm" method='post' onSubmit={handleClick}>
 				<div class="mb-3">
 					<label for="inputName" class="form-label">Nome</label>
 					<input type="text" name="nome" class="form-control" id="inputName" aria-describedby="emailHelp" />
 				</div>
 				<div class="mb-3">
 					<label for="inputEmail" class="form-label">E-mail</label>
-					<input type="email" name="email" class="form-control" id="email" />
+					<input type="email" name="email" class="form-control" id="inputEmail" />
 				</div>
 				<div class="mb-3">
 					<label for="inputCPF" class="form-label">CPF</label>
-					<input type="text" name="cpf" class="form-control" id="inputCPF" ></input>
+					<input type="text" name="cpf" class="form-control" id="inputCPF"></input>
 				</div>
 				<div class="mb-3">
 					<label for="inputTelefone" class="form-label">Nº telefone</label>
-					<input type="tel" name="telefone" class="form-control" id="inputTelefone" ></input>
+					<input type="tel" name="telefone" class="form-control" id="inputTelefone"></input>
 				</div>
 				<div class="mb-3">
-					<label for="senha" class="form-label">Senha</label>
-					<input type="password" name="passwd" class="form-control" id="passwd" ></input>
+					<label for="inputApartamento" class="form-label">Apartamento pertencente</label>
+					<input type="number" name="apartamento" class="form-control" id="inputApartamento" min={100} max={904}></input>
+				</div>
+				<div className="mb-3">
+					<label htmlFor="inputBloco" className="form-label">Número do bloco</label>
+					<input type="number" name="bloco" class="form-control" id="inputBloco" min={1} max={6}></input>
 				</div>
 
 				<button type="submit" class="btn btn-primary">Cadastrar</button>

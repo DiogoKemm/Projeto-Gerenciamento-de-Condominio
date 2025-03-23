@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import Login from "./pages/LoginPage";
@@ -20,26 +20,31 @@ axios.defaults.headers.common["Content-Type"] =
 
 function App() {
 
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState("")
 
   const navigate = useNavigate();
 
-  React.useEffect(() => {
-    // verifica se já está logado
+  useEffect(() => {
     const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role")
     if (token) {
       setIsLoggedIn(true);
+      setUserRole(role)
     }
   }, []);
 
   const handleLogin = () => {
     setIsLoggedIn(true);
+    window.location.reload();
   };
 
   const handleLogout = () => {
     // Clear the token from localStorage
     localStorage.removeItem("token");
+    localStorage.removeItem("role");
     setIsLoggedIn(false);
+    setUserRole("");
   };
 
   return (
@@ -50,7 +55,11 @@ function App() {
           <Button variant="text" onClick={() => navigate("CadastrarMorador")}>
             Cadastrar morador
           </Button>
-          <Button variant="text" onClick={() => navigate("CadastrarZelador")}>
+          <Button
+            variant="text"
+            onClick={() => navigate("CadastrarZelador")}
+            sx={{ display: userRole === 'Sindico' ? 'inline' : 'none' }} 
+          >
             Cadastrar zelador
           </Button>
           <Button variant="text" onClick={() => navigate("ListaApartamentos")}>
@@ -70,8 +79,8 @@ function App() {
                   element={<Login onLogin={handleLogin} />}
                 />
                 <Route
-                path="/"
-                element={"\nBem vindo!"}
+                  path="/"
+                  element={"\nBem vindo!"}
                 />
                 <Route
                   path="CadastrarMorador"
@@ -79,7 +88,7 @@ function App() {
                 />
                 <Route
                   path="ListaMercadorias"
-                  element={<ListaMercadorias/>}
+                  element={<ListaMercadorias />}
                 />
                 <Route
                   path="ListaApartamentos"
@@ -93,7 +102,7 @@ function App() {
             </Grid>
           </Grid>
         </Container>
-      ) : (<Login onLogin={handleLogin} />)}
+      ) : (<Login onLogin={(role) => handleLogin(role)} />)}
     </Box>
   );
 }

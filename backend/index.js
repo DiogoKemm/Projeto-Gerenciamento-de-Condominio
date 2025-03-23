@@ -10,7 +10,6 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-// const { Strategy, ExtractJwt } = require("passport-jwt");
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 
@@ -92,6 +91,7 @@ passport.use(
 					"SELECT * FROM users WHERE user_id = $1;",
 					[payload.username],
 				);
+				console.log(payload)
 
 				if (user) {
 					done(null, user);
@@ -109,7 +109,7 @@ passport.serializeUser(function (user, cb) {
 	process.nextTick(function () {
 		return cb(null, {
 			user_id: user.user_id,
-			username: user.user_id,
+			role: user.role
 		});
 	});
 });
@@ -130,16 +130,28 @@ const transporter = nodemailer.createTransport({
 	}
 });
 
+const requireSindico = (req, res, next) => {
+    // Verifique se o usuário está autenticado e tem a role 'Sindico'
+    if (req.user.role === 'Sindico') {
+        next(); // Permite o acesso
+    } else {
+        res.status(403).json({ message: "Acesso negado. Somente o síndico pode acessar esta página." });
+    }
+};
+
 app.post("/login", passport.authenticate("local", { session: false }), (req, res) => {
 	// Cria o token JWT
-	console.log(req.body.username);
-	const token = jwt.sign({ username: req.body.username }, "your-secret-key", {
+	const token = jwt.sign({ username: req.user.user_id, role: req.user.role }, "your-secret-key", {
 		expiresIn: "1h",
 	});
 
-	res.json({ message: "Login successful", token: token });
+	res.json({ message: "Login successful", token: token, role: req.user.role });
 },
 );
+
+app.get("/", (req, res) => {
+    res.send("Welcome to the Condominio API!");
+});
 
 app.post("/logout", function (req, res, next) {
 	req.logout(function (err) {
@@ -150,44 +162,58 @@ app.post("/logout", function (req, res, next) {
 	});
 });
 
-app.get("/moradores", requireJWTAuth, async (req, res) => {
-	const data = await db.any('SELECT a.numero, a.bloco, m.nome, m.cpf, m.telefone FROM apartamento a LEFT JOIN morador m ON a.morador=m.cpf ORDER BY numero');
+app.get("/moradores",  async (req, res) => {
+    const data = await db.any('SELECT * FROM morador m JOIN apartamento a ON a.numero = m.ap_num AND a.bloco = m.ap_bloco ORDER BY nome');	
 	res.json(data);
 });
 
-app.delete("/moradores/:id", requireJWTAuth, async (req, res) => {
+app.delete("/moradores/:id",  async (req, res) => {
 	const id = req.params.id;
-	console.log(id);
-	await db.none(`DELETE FROM morador WHERE cpf = '${id}'`);
+    await db.none('DELETE FROM morador WHERE cpf = $1', [id]);
+    res.sendStatus(200);
 });
 
-app.delete("/mercadorias/:id", requireJWTAuth, async (req, res) => {
+app.delete("/mercadorias/:id", async (req, res) => {
 	const id = req.params.id;
-	await db.none(`DELETE FROM mercadoria WHERE nota_fiscal = ${id}`);
+    await db.none('DELETE FROM mercadoria WHERE "ID" = $1', [id]);
+    res.sendStatus(200);
 });
 
-app.get("/mercadorias", requireJWTAuth, async (req, res) => {
-	const data = await db.any('SELECT mo.nome, mo.telefone, me.nota_fiscal, a.numero, a.bloco FROM mercadoria me JOIN morador mo ON mo.cpf = me.cpf JOIN apartamento a ON mo.cpf=a.morador ORDER BY nota_fiscal');
-	res.json(data);
+app.get("/mercadorias",  async (req, res) => {
+	const data = await db.any(`
+        SELECT 
+            m.nome, 
+            m.telefone, 
+            me."ID" as mercadoria_id,
+            me.descricao,
+            me.data_rec,
+            me.data_ent,
+            a.numero as apartamento_numero,
+            a.bloco
+        FROM mercadoria me
+        JOIN morador m ON me.cpf_morador = m.cpf
+        JOIN apartamento a ON m.ap_num = a.numero AND m.ap_bloco = a.bloco
+        ORDER BY me.data_rec DESC
+    `);
+    res.json(data);
 })
 
-app.post("/CadastrarMorador", requireJWTAuth, async (req, res) => {
+app.post("/CadastrarMorador",  async (req, res) => {
 	try {
-		const nome = req.body.nome;
-		const email = req.body.email;
-		const cpf = req.body.cpf;
-		const telefone = req.body.telefone;
-		const apartamento = req.body.apartamento;
-
-		await db.none('INSERT INTO morador(CPF, nome, telefone, email) VALUES($1, $2, $3, $4)', [cpf, nome, telefone, email]);
-		db.none('UPDATE apartamento SET morador = $1 WHERE numero = $2', [cpf, apartamento]);
-	}
-	catch (error) {
-		console.log(error);
-	}
+        const { nome, email, cpf, telefone, apartamento, bloco, papel } = req.body;
+        
+        await db.none(
+            'INSERT INTO morador(cpf, nome, email, telefone, ap_num, ap_bloco, papel) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+            [cpf, nome, email, telefone, apartamento, bloco, papel]
+        );
+        res.sendStatus(201);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erro ao cadastrar morador" });
+    }
 });
 
-app.post("/CadastrarApartamento", requireJWTAuth, async (req, res) => {
+app.post("/CadastrarApartamento",  async (req, res) => {
 	try {
 		const numero = req.body.nAP;
 		const bloco = req.body.nBloco;
@@ -198,46 +224,51 @@ app.post("/CadastrarApartamento", requireJWTAuth, async (req, res) => {
 	}
 })
 
-app.post("/CadastrarMercadoria", requireJWTAuth, async (req, res) => {
+app.post("/CadastrarMercadoria",  async (req, res) => {
 	try {
-		const pedido = req.body.pedido;
-		const cpf = req.body.cpf;
-		await db.none('INSERT INTO mercadoria(nota_fiscal, cpf) VALUES ($1, $2)', [pedido, cpf]);
-		const email = await db.any('SELECT morador.email FROM morador NATURAL JOIN mercadoria WHERE morador.cpf = $1', [cpf]);
-		console.log(email[0].email);
-		let message = {
-			from: "diogogarmerich@gmail.com",
-			to: email[0].email,
-			subject: "Você tem um pacote na portaria!",
-			text: `Seu pedido de nota fiscal ${pedido} chegou! Por favor, vá retirá-lo na portaria.`
-		};
-		transporter.sendMail(message, function (error, info) {
-			if (error) {
-				console.log(error);
-			} else {
-				console.log("email sent! " + info.response);
-			}
-		})
-	} catch (error) {
-		console.log(error);
-	}
+        const { cpf_morador, descricao } = req.body;
+        
+        await db.none(
+            'INSERT INTO mercadoria(cpf_morador, descricao, data_rec) VALUES ($1, $2, CURRENT_DATE)',
+            [cpf_morador, descricao]
+        );
+        
+        // Obter email do morador
+        const morador = await db.one(
+            'SELECT email FROM morador WHERE cpf = $1',
+            [cpf_morador]
+        );
+        
+        // Enviar email
+        const message = {
+            from: "diogogarmerich@gmail.com",
+            to: morador.email,
+            subject: "Você tem um pacote na portaria!",
+            text: `Sua encomenda "${descricao}" foi registrada. Data de recebimento: ${new Date().toLocaleDateString()}`
+        };
+        
+        transporter.sendMail(message);
+        res.sendStatus(201);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erro ao registrar mercadoria" });
+    }
 
 });
 
-app.post("/novoUsuario", requireJWTAuth, async (req, res) => {
+app.post("/novoUsuario", requireJWTAuth, requireSindico, async (req, res) => {
 	const saltRounds = 10;
 	try {
 		const userEmail = req.body.email;
-		console.log(userEmail);
 		const userPasswd = req.body.passwd.toString();
-		console.log(userPasswd);
 		const salt = bcrypt.genSaltSync(saltRounds);
 		const hashedPasswd = bcrypt.hashSync(userPasswd, salt);
 
-		console.log(`Email: ${userEmail} - Passwd: ${hashedPasswd}`);
-		db.none("INSERT INTO users (user_id, user_password) VALUES ($1, $2);", [
+		db.none("INSERT INTO users (user_id, user_password, role) VALUES ($1, $2, $3);", [
 			userEmail,
 			hashedPasswd,
+			'Zelador'
+
 		]);
 		res.sendStatus(200);
 	} catch (error) {

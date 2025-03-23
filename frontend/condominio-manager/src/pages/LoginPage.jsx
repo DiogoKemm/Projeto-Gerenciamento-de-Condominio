@@ -14,6 +14,7 @@ function Login(props) {
 
     const [username, setUsername] = React.useState("");
     const [passwd, setPasswd] = React.useState("");
+	const [role, setRole] = React.useState("");
 
     const [openMessage, setOpenMessage] = React.useState(false);
     const [messageText, setMessageText] = React.useState("");
@@ -25,12 +26,14 @@ function Login(props) {
             const response = await axios.post("/login", {
 				username: username,
 				password: passwd,
+				role: role
 			});
 
             console.log(response);
             if (response.status >= 200 && response.status < 300) {
                 // Salva o token JWT na sessão
                 localStorage.setItem("token", response.data.token);
+				localStorage.setItem("role", response.data.role)
                 // seta o estado do login caso tudo deu certo
                 props.onLogin();
             } else {

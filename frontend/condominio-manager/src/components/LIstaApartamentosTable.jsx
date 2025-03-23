@@ -3,8 +3,6 @@ import React, { useState, useEffect } from "react";
 function ListaApartamentosTable() {
   const [apartamentos, setApartamentos] = useState([]);
 
-
-
   useEffect(() => {
 
     const fetchData = async () => {
