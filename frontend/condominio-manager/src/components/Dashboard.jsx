@@ -1,10 +1,9 @@
 import React from "react";
-import ButtonMenu from "../components/ButtonMenu";
 
-const Dashboard = () => {
+const Dashboard = ({role}) => {
     return (
         <>
-       <ButtonMenu/>
+        <p>{role}</p>
         </>
     )
 };

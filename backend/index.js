@@ -91,7 +91,6 @@ passport.use(
 					"SELECT * FROM users WHERE user_id = $1;",
 					[payload.username],
 				);
-				console.log(payload)
 
 				if (user) {
 					done(null, user);
@@ -133,7 +132,7 @@ const transporter = nodemailer.createTransport({
 const requireSindico = (req, res, next) => {
 	// Verifique se o usuário está autenticado e tem a role 'Sindico'
 	if (req.user.role === 'Sindico') {
-		next(); // Permite o acesso
+		next(); 
 	} else {
 		res.status(403).json({ message: "Acesso negado. Somente o síndico pode acessar esta página." });
 	}

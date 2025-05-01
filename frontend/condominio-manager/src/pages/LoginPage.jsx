@@ -25,17 +25,13 @@ function Login(props) {
         try {
             const response = await axios.post("/login", {
 				username: username,
-				password: passwd,
-				role: role
+				password: passwd
 			});
 
-            console.log(response);
             if (response.status >= 200 && response.status < 300) {
-                // Salva o token JWT na sessão
                 localStorage.setItem("token", response.data.token);
-				localStorage.setItem("role", response.data.role)
-                // seta o estado do login caso tudo deu certo
-                props.onLogin();
+				localStorage.setItem("role", response.data.role);
+				props.onLogin(response.data.role);
             } else {
                 // falha
                 console.error("Falha na autenticação");

@@ -6,6 +6,7 @@ import CadastrarMorador from "./pages/CadastrarMorador";
 import CadastrarZelador from "./pages/CadastrarZelador";
 import ListaApartamentos from "./pages/ListaApartamentos";
 import ListaMercadorias from "./pages/ListaMercadorias";
+import Dashboard from "./components/Dashboard";
 import './App.css';
 import {
   Box,
@@ -34,9 +35,9 @@ function App() {
     }
   }, []);
 
-  const handleLogin = () => {
+  const handleLogin = (role) => {
     setIsLoggedIn(true);
-    window.location.reload();
+    setUserRole(role)
   };
 
   const handleLogout = () => {
@@ -48,10 +49,11 @@ function App() {
   };
 
   return (
+    
     <Box>
       {isLoggedIn ? (
         <Container sx={{ flexGrow: 1 }} maxWidth="lg">
-
+          <Dashboard role={userRole}/>
           <Button variant="text" onClick={() => navigate("CadastrarMorador")}>
             Cadastrar morador
           </Button>
