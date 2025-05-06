@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import Login from "./pages/LoginPage";
@@ -8,12 +8,7 @@ import ListaApartamentos from "./pages/ListaApartamentos";
 import ListaMercadorias from "./pages/ListaMercadorias";
 import Dashboard from "./components/Dashboard";
 import './App.css';
-import {
-  Box,
-  Button,
-  Container,
-  Grid
-} from "@mui/material";
+
 
 axios.defaults.baseURL = "http://localhost:8080/";
 axios.defaults.headers.common["Content-Type"] =
@@ -49,63 +44,46 @@ function App() {
   };
 
   return (
-    
-    <Box>
+    <div>
       {isLoggedIn ? (
-        <Container sx={{ flexGrow: 1 }} maxWidth="lg">
-          <Dashboard role={userRole}/>
-          <Button variant="text" onClick={() => navigate("CadastrarMorador")}>
+      <div className="container-fluid">
+        <div className="mb-3">
+        <button type='button' className="btn btn-link" onClick={() => navigate("CadastrarMorador")}>
             Cadastrar morador
-          </Button>
-          <Button
-            variant="text"
-            onClick={() => navigate("CadastrarZelador")}
-            sx={{ display: userRole === 'Sindico' ? 'inline' : 'none' }} 
-          >
-            Cadastrar zelador
-          </Button>
-          <Button variant="text" onClick={() => navigate("ListaApartamentos")}>
+          </button>{' '}
+          {userRole === 'Sindico' && (
+            <div type='button' className="btn btn-link" onClick={() => navigate("CadastrarZelador")}>
+              Cadastrar zelador
+            </div>
+          )}
+          <button type='button' className="btn btn-link" onClick={() => navigate("ListaApartamentos")}>
             Lista de apartamentos
-          </Button>
-          <Button variant="text" onClick={() => navigate("ListaMercadorias")}>
+          </button>{' '}
+          <button type='button' className="btn btn-link" onClick={() => navigate("ListaMercadorias")}>
             Lista de mercadorias
-          </Button>
-          <Button variant="text" color="error" onClick={handleLogout}>
+          </button>{' '}
+          <button type='button' className="btn btn-danger" onClick={handleLogout}>
             Logout
-          </Button>
-          <Grid container justifyContent="center" spacing={2}>
-            <Grid >
-              <Routes>
-                <Route
-                  path="login"
-                  element={<Login onLogin={handleLogin} />}
-                />
-                <Route
-                  path="/"
-                  element={"\nBem vindo!"}
-                />
-                <Route
-                  path="CadastrarMorador"
-                  element={<CadastrarMorador />}
-                />
-                <Route
-                  path="ListaMercadorias"
-                  element={<ListaMercadorias />}
-                />
-                <Route
-                  path="ListaApartamentos"
-                  element={<ListaApartamentos />}
-                />
-                <Route
-                  path="CadastrarZelador"
-                  element={<CadastrarZelador />}
-                />
-              </Routes>
-            </Grid>
-          </Grid>
-        </Container>
-      ) : (<Login onLogin={(role) => handleLogin(role)} />)}
-    </Box>
+          </button>
+        </div>
+
+        <div className="row">
+          <div className="col" md={10}>
+            <Routes>
+              <Route path="login" element={<Login onLogin={handleLogin} />} />
+              <Route path="/" element={<Dashboard role={userRole} />} />
+              <Route path="CadastrarMorador" element={<CadastrarMorador />} />
+              <Route path="ListaMercadorias" element={<ListaMercadorias />} />
+              <Route path="ListaApartamentos" element={<ListaApartamentos />} />
+              <Route path="CadastrarZelador" element={<CadastrarZelador />} />
+            </Routes>
+          </div>
+        </div>
+      </div>
+      ) : (
+      <Login onLogin={handleLogin} />
+      )}
+    </div>
   );
 }
 

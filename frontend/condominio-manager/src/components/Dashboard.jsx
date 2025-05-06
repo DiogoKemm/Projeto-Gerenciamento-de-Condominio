@@ -3,7 +3,7 @@ import React from "react";
 const Dashboard = ({role}) => {
     return (
         <>
-        <p>{role}</p>
+        <p>Você está logado como: {role}</p>
         </>
     )
 };

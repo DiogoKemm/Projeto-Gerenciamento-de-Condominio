@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Box } from "@mui/material";
 import ListaApartamentosTable from "../components/LIstaApartamentosTable";
 import CadastrarApartamento from "../components/CadastrarApartamento";
+import "../App.css"
 
 const ListaApartamentos = () => {
 
@@ -13,12 +13,12 @@ const ListaApartamentos = () => {
   }
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column" marginTop="50px">
+    <div className="container-fluid">
 
       <button onClick={mostrarForm}>Cadastrar apartamento</button>
       {showForm && (<CadastrarApartamento />)}
       <ListaApartamentosTable />
-    </Box>
+    </div>
   )
 };
 

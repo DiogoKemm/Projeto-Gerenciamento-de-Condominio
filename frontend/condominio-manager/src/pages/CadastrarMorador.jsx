@@ -1,5 +1,6 @@
 import React from "react";
 import { Box } from "@mui/material";
+import "../App.css"
 
 const CadastrarMorador = () => {
 
@@ -35,7 +36,7 @@ const CadastrarMorador = () => {
 	};
 
 	return (
-		<Box display="flex" justifyContent="center" alignItems="center" marginTop="50px">
+		<div className='container-fluid'>
 			<form id="moradorForm" method='post' onSubmit={handleClick}>
 				<div class="mb-3">
 					<label for="inputName" class="form-label">Nome</label>
@@ -64,7 +65,7 @@ const CadastrarMorador = () => {
 
 				<button type="submit" class="btn btn-primary">Cadastrar</button>
 			</form>
-		</Box>
+		</div>
 	);
 };
 

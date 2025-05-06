@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Box } from "@mui/material";
 import CadastrarMercadoria from "../components/CadastrarMercadoria";
 import ListaMercadoriasTable from "../components/ListaMercadoriasTable";
 
@@ -13,11 +12,11 @@ const ListaMercadorias = () => {
     }
 
     return (
-        <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column" marginTop="50px">
+        <div className="container-fluid">
             <button onClick={mostrarForm}>Cadastrar mercadoria</button>
             {showForm && (<CadastrarMercadoria />)}
             <ListaMercadoriasTable />
-        </Box>
+        </div>
     )
 };
 
