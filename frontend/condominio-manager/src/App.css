@@ -40,3 +40,23 @@
 .read-the-docs {
   color: #888;
 }
+
+.admin-theme {
+  --gradient-start: #ff416c;
+  --gradient-end: #ff4b2b;
+}
+
+.user-theme {
+  --gradient-start: #4776e6;
+  --gradient-end: #8e54e9;
+}
+
+.guest-theme {
+  --gradient-start: #56ccf2;
+  --gradient-end: #2f80ed;
+}
+
+body {
+  background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+  min-height: 100vh;
+}

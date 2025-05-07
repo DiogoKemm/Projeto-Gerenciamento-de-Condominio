@@ -28,7 +28,26 @@ function App() {
       setIsLoggedIn(true);
       setUserRole(role)
     }
-  }, []);
+
+    document.body.className = '';
+
+    switch(userRole) {
+      case 'Sindico':
+        document.body.style.background = 'linear-gradient(to right, #ff416c, #ff4b2b)';
+        break;
+      case 'Zelador':
+        document.body.style.background = 'linear-gradient(to right,rgb(65, 170, 255),rgb(64, 43, 255))';
+        break;
+      default:
+        document.body.style.background = 'linear-gradient(to right, #f2994a, #f2c94c)';
+    }
+
+    return () => {
+      document.body.style.background = '';
+    };
+
+
+  }, [userRole]);
 
   const handleLogin = (role) => {
     setIsLoggedIn(true);
@@ -41,6 +60,7 @@ function App() {
     localStorage.removeItem("role");
     setIsLoggedIn(false);
     setUserRole("");
+    navigate("/")
   };
 
   return (
@@ -48,18 +68,18 @@ function App() {
       {isLoggedIn ? (
       <div className="container-fluid">
         <div className="mb-3">
-        <button type='button' className="btn btn-link" onClick={() => navigate("CadastrarMorador")}>
+        <button type='button' className="btn btn-primary" onClick={() => navigate("CadastrarMorador")}>
             Cadastrar morador
           </button>{' '}
           {userRole === 'Sindico' && (
-            <div type='button' className="btn btn-link" onClick={() => navigate("CadastrarZelador")}>
+            <button type='button' className="btn btn-primary" onClick={() => navigate("CadastrarZelador")}>
               Cadastrar zelador
-            </div>
-          )}
-          <button type='button' className="btn btn-link" onClick={() => navigate("ListaApartamentos")}>
+            </button>
+          )}{' '}
+          <button type='button' className="btn btn-primary" onClick={() => navigate("ListaApartamentos")}>
             Lista de apartamentos
           </button>{' '}
-          <button type='button' className="btn btn-link" onClick={() => navigate("ListaMercadorias")}>
+          <button type='button' className="btn btn-primary" onClick={() => navigate("ListaMercadorias")}>
             Lista de mercadorias
           </button>{' '}
           <button type='button' className="btn btn-danger" onClick={handleLogout}>
