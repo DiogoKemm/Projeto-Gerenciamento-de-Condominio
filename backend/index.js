@@ -33,7 +33,7 @@ app.use(
 		secret: 'Super_secret',
 		resave: false,
 		saveUninitialized: false,
-		cookie: { secure: true },
+		cookie: { secure: false },
 	}),
 );
 app.use(passport.initialize());
@@ -224,7 +224,7 @@ app.post("/CadastrarMorador", requireJWTAuth, async (req, res) => {
 		const { nome, email, cpf, telefone, apartamento, bloco, papel } = req.body;
 
 		await db.none(
-			'INSERT INTO morador(cpf, nome, email, telefone, ap_num, ap_bloco, papel) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+			'INSERT INTO morador(cpf, nome, email, telefone, ap_num, ap_bloco) VALUES ($1, $2, $3, $4, $5, $6)',
 			[cpf, nome, email, telefone, apartamento, bloco, papel]
 		);
 		res.sendStatus(201);

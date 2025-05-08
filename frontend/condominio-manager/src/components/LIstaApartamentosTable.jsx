@@ -14,13 +14,14 @@ function ListaApartamentosTable() {
           Authorization: `bearer ${token}`,
         },
       });
+      console.log(apartamentos)
       const json = await data.json();
       setApartamentos(json);
 
     }
 
     fetchData().catch(console.error);
-  }, [apartamentos]);
+  }, []);
 
   function handleClick(id) {
     const token = localStorage.getItem("token");
@@ -35,7 +36,7 @@ function ListaApartamentosTable() {
 
   const tabelaApartamentos =
 
-    <table class="table">
+    <table className="table">
       <thead>
         <tr>
           <th scope="col">Nº</th>

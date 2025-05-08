@@ -7,6 +7,7 @@ import CadastrarZelador from "./pages/CadastrarZelador";
 import ListaApartamentos from "./pages/ListaApartamentos";
 import ListaMercadorias from "./pages/ListaMercadorias";
 import Dashboard from "./components/Dashboard";
+import NoPage from "./pages/NoPage"
 import './App.css';
 
 
@@ -90,6 +91,7 @@ function App() {
         <div className="row">
           <div className="col" md={10}>
             <Routes>
+              <Route path='*' element={<NoPage />} />
               <Route path="login" element={<Login onLogin={handleLogin} />} />
               <Route path="/" element={<Dashboard role={userRole} />} />
               <Route path="CadastrarMorador" element={<CadastrarMorador />} />
