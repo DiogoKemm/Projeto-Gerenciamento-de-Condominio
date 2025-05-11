@@ -23,6 +23,8 @@ function ListaApartamentosTable() {
     fetchData().catch(console.error);
   }, []);
 
+  console
+
   function handleClick(id) {
     const token = localStorage.getItem("token");
     fetch(`http://localhost:8080/moradores/${id}`, {

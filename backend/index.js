@@ -205,10 +205,7 @@ app.get("/mercadorias", requireJWTAuth, async (req, res) => {
         SELECT 
             m.nome, 
             m.telefone, 
-            me."ID" as mercadoria_id,
-            me.descricao,
-            me.data_rec,
-            me.data_ent,
+            me.*,
             a.numero as apartamento_numero,
             a.bloco
         FROM mercadoria me
@@ -217,6 +214,14 @@ app.get("/mercadorias", requireJWTAuth, async (req, res) => {
         ORDER BY me.data_rec DESC
     `);
 	res.json(data);
+})
+
+app.get("/countMercadorias", requireJWTAuth, async(req, res) => {
+	const data = await db.any(`
+		SELECT
+			count(m."ID")
+		FROM mercadoria m
+		GROUP BY `)
 })
 
 app.post("/CadastrarMorador", requireJWTAuth, async (req, res) => {
@@ -247,28 +252,28 @@ app.post("/CadastrarApartamento", requireJWTAuth, async (req, res) => {
 
 app.post("/CadastrarMercadoria", requireJWTAuth, async (req, res) => {
 	try {
-		const { cpf_morador, descricao } = req.body;
+		const { pedido, cpf } = req.body;
 
 		await db.none(
-			'INSERT INTO mercadoria(cpf_morador, descricao, data_rec) VALUES ($1, $2, CURRENT_DATE)',
-			[cpf_morador, descricao]
+			'INSERT INTO mercadoria(cpf_morador,  data_rec) VALUES ($1, CURRENT_DATE)',
+			[cpf]
 		);
 
-		// Obter email do morador
-		const morador = await db.one(
-			'SELECT email FROM morador WHERE cpf = $1',
-			[cpf_morador]
-		);
+		// // Obter email do morador
+		// const morador = await db.one(
+		// 	'SELECT email FROM morador WHERE cpf = $1',
+		// 	[cpf]
+		// );
 
-		// Enviar email
-		const message = {
-			from: "diogogarmerich@gmail.com",
-			to: morador.email,
-			subject: "Você tem um pacote na portaria!",
-			text: `Sua encomenda "${descricao}" foi registrada. Data de recebimento: ${new Date().toLocaleDateString()}`
-		};
+		// // Enviar email
+		// const message = {
+		// 	from: "diogogarmerich@gmail.com",
+		// 	to: morador.email,
+		// 	subject: "Você tem um pacote na portaria!",
+		// 	text: `Sua encomenda "${pedido}" foi registrada. Data de recebimento: ${new Date().toLocaleDateString()}`
+		// };
 
-		transporter.sendMail(message);
+		// transporter.sendMail(message);
 		res.sendStatus(201);
 	} catch (error) {
 		console.error(error);

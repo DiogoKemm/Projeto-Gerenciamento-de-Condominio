@@ -1,4 +1,5 @@
 import React from "react";
+import "../App.css"
 
 function CadastrarMercadoria() {
 
@@ -36,16 +37,16 @@ function CadastrarMercadoria() {
 
 	return (
 		<form id="mercadoriaForm" method="post" onSubmit={handleClick}>
-			<div class="mb-3">
-				<label for="pedido" class="form-label">Número do pedido</label>
-				<input type="number" name="pedido" class="form-control" id="pedido" aria-describedby="emailHelp" />
+			<div className="mb-3">
+				<label for="pedido" className="form-label">Número do pedido</label>
+				<input type="number" name="pedido" className="form-control" id="pedido" aria-describedby="emailHelp" />
 			</div>
-			<div class="mb-3">
+			<div className="mb-3">
 				<label for="cpf" class="form-label">CPF do morador</label>
-				<input type="text" name="cpf" class="form-control" id="cpf" />
+				<input type="text" name="cpf" className="form-control" id="cpf" />
 			</div>
 
-			<button type="submit" class="btn btn-primary">Submit</button>
+			<button type="submit" className="btn btn-primary">Submit</button>
 		</form>
 	)
 }

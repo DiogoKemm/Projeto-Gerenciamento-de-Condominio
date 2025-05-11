@@ -2,10 +2,13 @@ import React from "react";
 import { Box } from "@mui/material";
 import "../App.css"
 
+
 const CadastrarMorador = () => {
+	const [error, setError] = useState('');
 
 	function handleClick(e) {
 		e.preventDefault();
+		setError('');
 
 		const form = e.target;
 		const formData = new FormData(form);
@@ -21,7 +24,7 @@ const CadastrarMorador = () => {
 		if (i !== 0) {
 			alert("Preencha todos os campos!");
 		} else {
-
+			try {
 			const token = localStorage.getItem("token");
 
 			fetch('http://localhost:8080/CadastrarMorador/', {
@@ -30,7 +33,18 @@ const CadastrarMorador = () => {
 				},
 				method: form.method,
 				body: formData
-			});
+			}) } catch(err) {
+				if (err.response && err.response.data) {
+					// Verifica o tipo de erro específico
+					if (err.response.data.code === '23503' || 
+						err.response.data.message.includes('violates foreign key constraint "morador_ap_num_ap_bloco_fkey"')) {
+					  setError('Erro ao cadastrar morador: bloco ou apartamento não existentes');
+					} else {
+					  // Outros erros genéricos
+					  setError(err.response.data.message || 'Ocorreu um erro ao cadastrar o morador');
+					}
+				}
+			}
 		}
 
 	};
@@ -62,7 +76,7 @@ const CadastrarMorador = () => {
 					<label htmlFor="inputBloco" className="form-label">Número do bloco</label>
 					<input type="number" name="bloco" className="form-control" id="inputBloco" min={1} max={6}></input>
 				</div>
-
+				{error && <div className="error-message" style={{ color: 'red' }}>{error}</div>}
 				<button type="submit" className="btn btn-primary">Cadastrar</button>
 			</form>
 		</div>
