@@ -7,7 +7,6 @@ function Login(props) {
 
 	const [username, setUsername] = React.useState("");
 	const [passwd, setPasswd] = React.useState("");
-	const [role, setRole] = React.useState("");
 
 	const [openMessage, setOpenMessage] = React.useState(false);
 	const [messageText, setMessageText] = React.useState("");
@@ -58,7 +57,7 @@ function Login(props) {
 		<div className="d-flex justify-content-center align-items-center vh-100">
 			<div style={{ minWidth: '300px' }}>
 				<div className="mb-3">
-					<label htmlFor="username-input" className="form-label">User:</label>
+					<label htmlFor="username-input" className="form-label">Email:</label>
 					<input
 						type="text"
 						className="form-control form-control-sm"
@@ -70,7 +69,7 @@ function Login(props) {
 				</div>
 
 				<div className="mb-3">
-					<label htmlFor="passwd-input" className="form-label">Password:</label>
+					<label htmlFor="passwd-input" className="form-label">Senha:</label>
 					<input
 						type="password"
 						className="form-control form-control-sm"
@@ -98,9 +97,8 @@ function Login(props) {
 					</button>
 				</div>
 
-				{/* Alerta Bootstrap (substituindo Snackbar do MUI) */}
 				{openMessage && (
-					<div className={`alert alert-${messageSeverity} alert-dismissible fade show`} role="alert">
+					<div className="alert alert-danger alert-dismissible fade show" role="alert">
 						{messageText}
 						<button type="button" className="btn-close" aria-label="Close" onClick={handleCloseMessage}></button>
 					</div>
