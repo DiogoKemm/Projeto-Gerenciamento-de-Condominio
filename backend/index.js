@@ -217,11 +217,11 @@ app.get("/mercadorias", requireJWTAuth, async (req, res) => {
 })
 
 app.get("/countMercadorias", requireJWTAuth, async(req, res) => {
-	const data = await db.any(`
+	const data = await db.one(`
 		SELECT
-			count(m."ID")
-		FROM mercadoria m
-		GROUP BY `)
+			count(*) as total
+		FROM mercadoria`);
+	res.json(data);
 })
 
 app.post("/CadastrarMorador", requireJWTAuth, async (req, res) => {
@@ -255,8 +255,8 @@ app.post("/CadastrarMercadoria", requireJWTAuth, async (req, res) => {
 		const { pedido, cpf } = req.body;
 
 		await db.none(
-			'INSERT INTO mercadoria(cpf_morador,  data_rec) VALUES ($1, CURRENT_DATE)',
-			[cpf]
+			'INSERT INTO mercadoria(cpf_morador,  data_rec, "ID") VALUES ($1, CURRENT_DATE, $2)',
+			[cpf, pedido]
 		);
 
 		// // Obter email do morador

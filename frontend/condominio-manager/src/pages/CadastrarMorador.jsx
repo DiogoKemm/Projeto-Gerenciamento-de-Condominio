@@ -1,52 +1,54 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box } from "@mui/material";
-import "../App.css"
-
+import "../App.css";
 
 const CadastrarMorador = () => {
-	const [error, setError] = useState('');
+	const [error, setError] = useState(null);
 
-	function handleClick(e) {
+	async function handleClick(e) {
 		e.preventDefault();
-		setError('');
+		setError(null); // Reseta o erro antes de cada submissão
 
 		const form = e.target;
 		const formData = new FormData(form);
 
-		let i = 0.
-
+		// Verifica campos vazios
+		let camposVazios = 0;
 		for (const value of formData.values()) {
 			if (value === '') {
-				i++;
+				camposVazios++;
 			}
 		}
 
-		if (i !== 0) {
-			alert("Preencha todos os campos!");
-		} else {
-			try {
+		if (camposVazios !== 0) {
+			setError("Preencha todos os campos!");
+			return;
+		}
+
+		try {
 			const token = localStorage.getItem("token");
 
-			fetch('http://localhost:8080/CadastrarMorador/', {
+			const response = await fetch('http://localhost:8080/CadastrarMorador/', {
 				headers: {
 					Authorization: `bearer ${token}`,
 				},
 				method: form.method,
 				body: formData
-			}) } catch(err) {
-				if (err.response && err.response.data) {
-					// Verifica o tipo de erro específico
-					if (err.response.data.code === '23503' || 
-						err.response.data.message.includes('violates foreign key constraint "morador_ap_num_ap_bloco_fkey"')) {
-					  setError('Erro ao cadastrar morador: bloco ou apartamento não existentes');
-					} else {
-					  // Outros erros genéricos
-					  setError(err.response.data.message || 'Ocorreu um erro ao cadastrar o morador');
-					}
-				}
-			}
-		}
+			});
 
+			if (!response.ok) {
+				const errorData = await response.json();
+				throw errorData;
+			}
+
+			// Se chegou aqui, o cadastro foi bem sucedido
+			alert("Morador cadastrado com sucesso!");
+			form.reset(); // Limpa o formulário após sucesso
+
+		} catch (err) {
+			setError("Erro ao cadastrar morador: bloco ou apartamento não existentes");
+
+		}
 	};
 
 	return (
@@ -76,7 +78,14 @@ const CadastrarMorador = () => {
 					<label htmlFor="inputBloco" className="form-label">Número do bloco</label>
 					<input type="number" name="bloco" className="form-control" id="inputBloco" min={1} max={6}></input>
 				</div>
-				{error && <div className="error-message" style={{ color: 'red' }}>{error}</div>}
+
+				{/* Exibição de erro */}
+				{error && (
+					<div className="alert alert-danger" role="alert">
+						{error}
+					</div>
+				)}
+
 				<button type="submit" className="btn btn-primary">Cadastrar</button>
 			</form>
 		</div>

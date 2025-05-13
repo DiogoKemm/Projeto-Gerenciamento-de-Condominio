@@ -10,29 +10,28 @@ import Dashboard from "./components/Dashboard";
 import NoPage from "./pages/NoPage"
 import './App.css';
 
-
 axios.defaults.baseURL = "http://localhost:8080/";
 axios.defaults.headers.common["Content-Type"] =
   "application/json;charset=utf-8";
 
 function App() {
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userRole, setUserRole] = useState("")
+  const [userRole, setUserRole] = useState("");
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const role = localStorage.getItem("role")
+    // Verifica sessionStorage em vez de localStorage
+    const token = sessionStorage.getItem("token");
+    const role = sessionStorage.getItem("role");
     if (token) {
       setIsLoggedIn(true);
-      setUserRole(role)
+      setUserRole(role);
     }
 
     document.body.className = '';
 
-    switch(userRole) {
+    switch (userRole) {
       case 'Sindico':
         document.body.style.background = 'linear-gradient(to right, #ff416c, #ff4b2b)';
         break;
@@ -46,64 +45,68 @@ function App() {
     return () => {
       document.body.style.background = '';
     };
-
-
   }, [userRole]);
 
-  const handleLogin = (role) => {
+  const handleLogin = (role, token) => {
     setIsLoggedIn(true);
-    setUserRole(role)
+    setUserRole(role);
+    // Armazena no sessionStorage em vez de localStorage
+    sessionStorage.setItem("token", token);
+    sessionStorage.setItem("role", role);
   };
 
   const handleLogout = () => {
-    // Clear the token from localStorage
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
+    // Limpa o sessionStorage em vez de localStorage
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("role");
     setIsLoggedIn(false);
     setUserRole("");
-    navigate("/")
+    navigate("/");
   };
 
   return (
     <div>
       {isLoggedIn ? (
-      <div className="container-fluid">
-        <div className="mb-3">
-        <button type='button' className="btn btn-primary" onClick={() => navigate("CadastrarMorador")}>
-            Cadastrar morador
-          </button>{' '}
-          {userRole === 'Sindico' && (
-            <button type='button' className="btn btn-primary" onClick={() => navigate("CadastrarZelador")}>
-              Cadastrar zelador
+        <div className="container-fluid">
+          <div className="mb-3">
+            <button type='button' className="btn btn-warning" onClick={() => navigate("/")}>
+              Início
+            </button>{' '}
+            <button type='button' className="btn btn-primary" onClick={() => navigate("CadastrarMorador")}>
+              Cadastrar morador
+            </button>{' '}
+            {userRole === 'Sindico' && (
+              <button type='button' className="btn btn-primary" onClick={() => navigate("CadastrarZelador")}>
+                Cadastrar zelador
+              </button>
+            )}{' '}
+            <button type='button' className="btn btn-primary" onClick={() => navigate("ListaApartamentos")}>
+              Lista de apartamentos
+            </button>{' '}
+            <button type='button' className="btn btn-primary" onClick={() => navigate("ListaMercadorias")}>
+              Lista de mercadorias
+            </button>{' '}
+            <button type='button' className="btn btn-danger" onClick={handleLogout}>
+              Logout
             </button>
-          )}{' '}
-          <button type='button' className="btn btn-primary" onClick={() => navigate("ListaApartamentos")}>
-            Lista de apartamentos
-          </button>{' '}
-          <button type='button' className="btn btn-primary" onClick={() => navigate("ListaMercadorias")}>
-            Lista de mercadorias
-          </button>{' '}
-          <button type='button' className="btn btn-danger" onClick={handleLogout}>
-            Logout
-          </button>
-        </div>
+          </div>
 
-        <div className="row">
-          <div className="col" md={10}>
-            <Routes>
-              <Route path='*' element={<NoPage />} />
-              <Route path="login" element={<Login onLogin={handleLogin} />} />
-              <Route path="/" element={<Dashboard role={userRole} />} />
-              <Route path="CadastrarMorador" element={<CadastrarMorador />} />
-              <Route path="ListaMercadorias" element={<ListaMercadorias />} />
-              <Route path="ListaApartamentos" element={<ListaApartamentos />} />
-              <Route path="CadastrarZelador" element={<CadastrarZelador />} />
-            </Routes>
+          <div className="row">
+            <div className="col" md={10}>
+              <Routes>
+                <Route path='*' element={<NoPage />} />
+                <Route path="login" element={<Login onLogin={handleLogin} />} />
+                <Route path="/" element={<Dashboard role={userRole} />} />
+                <Route path="CadastrarMorador" element={<CadastrarMorador />} />
+                <Route path="ListaMercadorias" element={<ListaMercadorias />} />
+                <Route path="ListaApartamentos" element={<ListaApartamentos />} />
+                <Route path="CadastrarZelador" element={<CadastrarZelador />} />
+              </Routes>
+            </div>
           </div>
         </div>
-      </div>
       ) : (
-      <Login onLogin={handleLogin} />
+        <Login onLogin={handleLogin} />
       )}
     </div>
   );
