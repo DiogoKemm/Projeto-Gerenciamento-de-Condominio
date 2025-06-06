@@ -60,3 +60,18 @@ body {
   background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
   min-height: 100vh;
 }
+
+#dashboard {
+  background-color: #f0f4f8;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  max-width: 400px;
+  margin: 20px auto;
+  font-family: Arial, sans-serif; 
+}
+
+#countMercadorias {
+  color: red;
+  font-size: 30px;
+}

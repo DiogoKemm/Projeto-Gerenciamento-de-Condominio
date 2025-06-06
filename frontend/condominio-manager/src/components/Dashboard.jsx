@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "../App.css"
 
 const Dashboard = ({ role }) => {
     const [countMercadorias, setCountMercadorias] = useState(0);
@@ -20,10 +21,15 @@ const Dashboard = ({ role }) => {
     }, []);
 
     return (
-        <>
-            <p>Você está logado como: {role}</p>
-            <p>Número de mercadorias: {countMercadorias.total}</p>
-        </>
+        <div id='dashboard'>
+            <p>
+                <strong>Você está logado como:</strong> {role}
+            </p>
+            <p>
+                <strong>Número de mercadorias</strong>
+                <span id='countMercadorias'><br></br>{countMercadorias.total}</span>
+            </p>
+        </div>
     )
 
 };

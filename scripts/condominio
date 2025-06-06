@@ -1,0 +1,160 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 17.5 (Ubuntu 17.5-1.pgdg22.04+1)
+-- Dumped by pg_dump version 17.5 (Ubuntu 17.5-1.pgdg22.04+1)
+
+-- Started on 2025-06-06 12:47:20 -03
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 4 (class 2615 OID 2200)
+-- Name: public; Type: SCHEMA; Schema: -; Owner: pg_database_owner
+--
+
+CREATE SCHEMA public;
+
+
+ALTER SCHEMA public OWNER TO pg_database_owner;
+
+--
+-- TOC entry 3404 (class 0 OID 0)
+-- Dependencies: 4
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: pg_database_owner
+--
+
+COMMENT ON SCHEMA public IS 'standard public schema';
+
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 217 (class 1259 OID 24825)
+-- Name: apartamento; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.apartamento (
+    numero integer NOT NULL,
+    bloco integer NOT NULL
+);
+
+
+ALTER TABLE public.apartamento OWNER TO postgres;
+
+--
+-- TOC entry 219 (class 1259 OID 24843)
+-- Name: mercadoria; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.mercadoria (
+    cpf_morador character varying(11) NOT NULL,
+    data_rec date NOT NULL,
+    "ID" integer NOT NULL
+);
+
+
+ALTER TABLE public.mercadoria OWNER TO postgres;
+
+--
+-- TOC entry 218 (class 1259 OID 24830)
+-- Name: morador; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.morador (
+    cpf character varying(11) NOT NULL,
+    nome character varying(100) NOT NULL,
+    email character varying(150),
+    telefone character varying(15),
+    ap_num integer NOT NULL,
+    ap_bloco integer NOT NULL
+);
+
+
+ALTER TABLE public.morador OWNER TO postgres;
+
+--
+-- TOC entry 220 (class 1259 OID 24854)
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.users (
+    user_id character varying NOT NULL,
+    user_password character varying NOT NULL,
+    role character varying(50)
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- TOC entry 3395 (class 0 OID 24825)
+-- Dependencies: 217
+-- Data for Name: apartamento; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.apartamento VALUES (101, 1);
+INSERT INTO public.apartamento VALUES (102, 1);
+INSERT INTO public.apartamento VALUES (103, 1);
+INSERT INTO public.apartamento VALUES (201, 2);
+INSERT INTO public.apartamento VALUES (202, 2);
+INSERT INTO public.apartamento VALUES (203, 2);
+INSERT INTO public.apartamento VALUES (301, 3);
+INSERT INTO public.apartamento VALUES (302, 3);
+INSERT INTO public.apartamento VALUES (303, 3);
+INSERT INTO public.apartamento VALUES (401, 4);
+INSERT INTO public.apartamento VALUES (102, 4);
+INSERT INTO public.apartamento VALUES (104, 2);
+INSERT INTO public.apartamento VALUES (100, 1);
+
+
+--
+-- TOC entry 3397 (class 0 OID 24843)
+-- Dependencies: 219
+-- Data for Name: mercadoria; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.mercadoria VALUES ('12323003204', '2025-05-13', 876);
+INSERT INTO public.mercadoria VALUES ('12323003204', '2025-05-13', 877);
+INSERT INTO public.mercadoria VALUES ('12323003204', '2025-05-13', 878);
+
+
+--
+-- TOC entry 3396 (class 0 OID 24830)
+-- Dependencies: 218
+-- Data for Name: morador; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.morador VALUES ('12323003204', 'diogo', 'diogogarmerich@gmail.com', '1221', 100, 1);
+
+
+--
+-- TOC entry 3398 (class 0 OID 24854)
+-- Dependencies: 220
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public.users VALUES ('sindico@gmail.com', '$2b$10$B3/cxgYZcrjkI.jF0RAuAeAilC5l11jsA6aTaUTB9xpeoSzjlV6UW', 'Sindico');
+INSERT INTO public.users VALUES ('fulano@gmail.com', '$2b$10$9KJzfN1Eyqkq.qivE4QhFehINeA3uXB4omm2nkZMvQQ//UkC9lQ2m', 'Zelador');
+INSERT INTO public.users VALUES ('diogo@gmail.com', '$2b$10$PLYF7q4T9IVcHtC5BR8lhuGDqIEA8BseSsU/JoJHQIrBSiiOybOAa', 'Zelador');
+
+
+-- Completed on 2025-06-06 12:47:22 -03
+
+--
+-- PostgreSQL database dump complete
+--
+
