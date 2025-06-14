@@ -1,10 +1,10 @@
+require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const cors = require("cors");
 const pgp = require('pg-promise')();
 const nodemailer = require('nodemailer');
-
 const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -13,9 +13,12 @@ const bcrypt = require("bcrypt");
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 
-const usuario = 'postgres';
-const senha = 'postgres';
-const db = pgp(`postgres://${usuario}:${senha}@localhost:5432/condominio`);
+const usuario = process.env.DB_USER;
+const senha = process.env.DB_PASSWORD;
+const host = process.env.DB_HOST;
+const port = process.env.DB_PORT;
+const database = process.env.DB_NAME;
+const db = pgp(`postgres://${usuario}:${senha}@${host}:${port}/${database}`);
 
 const upload = multer();
 const app = express();
@@ -30,7 +33,7 @@ app.use(express.static('public'));
 
 app.use(
 	session({
-		secret: 'Super_secret',
+		secret: process.env.SESSION_SECRET,
 		resave: false,
 		saveUninitialized: false,
 		cookie: { secure: false },
@@ -83,7 +86,7 @@ passport.use(
 	new JwtStrategy(
 		{
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-			secretOrKey: "your-secret-key",
+			secretOrKey: process.env.JWT_SECRET,
 		},
 		async (payload, done) => {
 			try {
@@ -124,8 +127,8 @@ const requireJWTAuth = passport.authenticate("jwt", { session: false });
 const transporter = nodemailer.createTransport({
 	service: 'gmail',
 	auth: {
-		user: 'diogogarmerich@gmail.com',
-		pass: 'hetg yfcg qjwp xtsj '
+		user: process.env.EMAIL_USER,
+		pass: process.env.EMAIL_PASS
 	}
 });
 
@@ -267,7 +270,7 @@ app.post("/CadastrarMercadoria", requireJWTAuth, async (req, res) => {
 
 		// // Enviar email
 		// const message = {
-		// 	from: "diogogarmerich@gmail.com",
+		// 	from: process.env.EMAIL_USER,
 		// 	to: morador.email,
 		// 	subject: "Você tem um pacote na portaria!",
 		// 	text: `Sua encomenda "${pedido}" foi registrada. Data de recebimento: ${new Date().toLocaleDateString()}`

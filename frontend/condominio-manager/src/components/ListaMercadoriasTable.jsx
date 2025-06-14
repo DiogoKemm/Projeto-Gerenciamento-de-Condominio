@@ -20,7 +20,7 @@ function ListaMercadoriasTable() {
     }
 
     fetchData().catch(console.error);
-  }, [mercadorias]);
+  }, []);
 
   const handleClick = id => {
     const token = localStorage.getItem("token");
@@ -33,8 +33,7 @@ function ListaMercadoriasTable() {
     .then(response => response.json(id));
   }
 
-  const tabelaApartamentos =
-
+  return (
     <table className="table">
       <thead>
         <tr>
@@ -46,24 +45,19 @@ function ListaMercadoriasTable() {
           <th scope="col">Deletar?</th>
         </tr>
       </thead>
-      {mercadorias.map(mercadoria => (
-        <tbody>
-          <tr key={mercadoria.pedido}>
+      <tbody>
+          {mercadorias.map((mercadoria) => (
+          <tr key={mercadoria.ID}>
             <th scope="row">{mercadoria.ID}</th>
-            <th>{mercadoria.apartamento_numero}</th>
+            <td>{mercadoria.apartamento_numero}</td>
             <td>{mercadoria.bloco}</td>
             <td>{mercadoria.nome}</td>
             <td>{mercadoria.telefone}</td>
             <td><button onClick={() => handleClick(mercadoria.ID)}>Deletar</button></td>
           </tr>
+          ))}
         </tbody>
-      ))}
     </table>
-
-  return (
-    <>
-      {tabelaApartamentos}
-    </>
   )
 
 }

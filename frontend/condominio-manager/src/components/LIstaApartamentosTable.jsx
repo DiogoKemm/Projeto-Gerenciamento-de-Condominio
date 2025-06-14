@@ -14,7 +14,6 @@ function ListaApartamentosTable() {
           Authorization: `bearer ${token}`,
         },
       });
-      console.log(apartamentos)
       const json = await data.json();
       setApartamentos(json);
 
@@ -36,39 +35,36 @@ function ListaApartamentosTable() {
       .then(response => response.json(id));
   }
 
-  const tabelaApartamentos =
-
-    <table className="table">
-      <thead>
-        <tr>
-          <th scope="col">Nº</th>
-          <th scope="col">Bloco</th>
-          <th scope="col">Morador</th>
-          <th scope="col">Telefone</th>
-          <th scope="col">CPF</th>
-          <th scope="col">Remover morador?</th>
-        </tr>
-      </thead>
-      {apartamentos.map(apartamento => (
-        <tbody>
-          <tr key={apartamento.cpf}>
-            <th scope="row">{apartamento.numero}</th>
-            <td>{apartamento.bloco}</td>
-            <td>{apartamento.nome}</td>
-            <td>{apartamento.telefone}</td>
-            <td>{apartamento.cpf}</td>
-            <td><button onClick={() => handleClick(apartamento.cpf)}>Remover</button></td>
-          </tr>
-        </tbody>
-      ))}
-    </table>
-
-
   return (
-    <>
-      {tabelaApartamentos}
-    </>
-  )
+      <table className="table">
+        <thead>
+          <tr>
+            <th scope="col">Nº</th>
+            <th scope="col">Bloco</th>
+            <th scope="col">Morador</th>
+            <th scope="col">Telefone</th>
+            <th scope="col">CPF</th>
+            <th scope="col">Remover morador?</th>
+          </tr>
+        </thead>
+        <tbody>
+          {apartamentos.map((apartamento) => (
+            <tr key={apartamento.cpf}>
+              <th scope="row">{apartamento.numero}</th>
+              <td>{apartamento.bloco}</td>
+              <td>{apartamento.nome}</td>
+              <td>{apartamento.telefone}</td>
+              <td>{apartamento.cpf}</td>
+              <td>
+                <button onClick={() => handleClick(apartamento.cpf)}>
+                  Remover
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+    </table>
+  );
 }
 
 export default ListaApartamentosTable;
