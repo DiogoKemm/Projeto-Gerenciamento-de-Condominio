@@ -22,7 +22,7 @@ Crie um banco de dados no seu servidor PostgreSQL. Você pode nomeá-lo, por exe
 Execute o script SQL, localizado na pasta `scripts`, no seu banco de dados recém-criado para criar as tabelas necessárias. Este script também insere um usuário Síndico padrão para o primeiro acesso.
 
 ```
-psql -U seu_usuario_postgres -d condominio_db -f schema.sql
+psql -U seu_usuario_postgres -d condominio -f condominio.sql
 ```
 
 
