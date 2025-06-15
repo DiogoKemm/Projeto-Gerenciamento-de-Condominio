@@ -165,7 +165,7 @@ app.post("/logout", function (req, res, next) {
 });
 
 app.get("/moradores", requireJWTAuth, async (req, res) => {
-	const data = await db.any('SELECT * FROM morador m JOIN apartamento a ON a.numero = m.ap_num AND a.bloco = m.ap_bloco ORDER BY nome');
+	const data = await db.any('SELECT * FROM morador m RIGHT JOIN apartamento a ON a.numero = m.ap_num AND a.bloco = m.ap_bloco ORDER BY nome');
 	res.json(data);
 });
 
@@ -278,9 +278,8 @@ app.post("/CadastrarMercadoria", requireJWTAuth, async (req, res) => {
 
 		// transporter.sendMail(message);
 		res.sendStatus(201);
-	} catch (error) {
-		console.error(error);
-		res.status(500).json({ error: "Erro ao registrar mercadoria" });
+	} catch (err) {
+		res.status(500).json({ error: err.message});
 	}
 
 });

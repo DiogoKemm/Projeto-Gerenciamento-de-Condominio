@@ -20,7 +20,7 @@ function ListaApartamentosTable() {
     }
 
     fetchData().catch(console.error);
-  }, []);
+  }, [apartamentos]);
 
   console
 

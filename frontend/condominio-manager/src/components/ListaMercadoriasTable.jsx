@@ -20,7 +20,7 @@ function ListaMercadoriasTable() {
     }
 
     fetchData().catch(console.error);
-  }, []);
+  }, [mercadorias]);
 
   const handleClick = id => {
     const token = localStorage.getItem("token");
@@ -34,7 +34,7 @@ function ListaMercadoriasTable() {
   }
 
   return (
-    <table className="table">
+    <table className="table table-striped table-hover">
       <thead>
         <tr>
           <th scope="col">Nº do pedido</th>
@@ -53,7 +53,7 @@ function ListaMercadoriasTable() {
             <td>{mercadoria.bloco}</td>
             <td>{mercadoria.nome}</td>
             <td>{mercadoria.telefone}</td>
-            <td><button onClick={() => handleClick(mercadoria.ID)}>Deletar</button></td>
+            <td><button className="btn btn-danger btn-sm" onClick={() => handleClick(mercadoria.ID)}>Deletar</button></td>
           </tr>
           ))}
         </tbody>

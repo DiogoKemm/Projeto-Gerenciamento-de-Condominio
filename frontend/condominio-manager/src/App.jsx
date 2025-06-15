@@ -50,13 +50,11 @@ function App() {
   const handleLogin = (role, token) => {
     setIsLoggedIn(true);
     setUserRole(role);
-    // Armazena no sessionStorage em vez de localStorage
     sessionStorage.setItem("token", token);
     sessionStorage.setItem("role", role);
   };
 
   const handleLogout = () => {
-    // Limpa o sessionStorage em vez de localStorage
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("role");
     setIsLoggedIn(false);

@@ -5,7 +5,7 @@ Este documento fornece as instruções necessárias para configurar e executar o
 ## Pré-requisitos
 
 Antes de começar, certifique-se de que você tem os seguintes softwares instalados em sua máquina:
-* Node.js (que inclui o npm)
+* Node.js (que inclui o npm, pode usar yarn se preferir)
 * PostgreSQL
 
 ## Instruções de Execução
@@ -22,12 +22,12 @@ O backend requer uma instância do PostgreSQL para funcionar.
     CREATE DATABASE condominio;
     ```
 
-2.  **Execute o Script:**
+2.  **Execute o script do BD:**
     Utilize o script SQL localizado na pasta `scripts` do projeto para criar as tabelas e popular o banco de dados. Execute o comando abaixo, ajustando o caminho para o arquivo se necessário:
     ```bash
-    psql -U postgres -d condominio -a -f ./scripts/script.sql
+    psql -U {your username} -d condominio -a -f ./scripts/script.sql
     ```
-    > **Nota:** O projeto está configurado para usar o usuário `postgres` e a senha `postgres` para a conexão com o banco de dados. Caso suas credenciais sejam diferentes, altere-as no arquivo `backend/index.js`.
+    > **Nota:** O projeto está configurado para usar o usuário `postgres` e a senha `postgres` para a conexão com o banco de dados. Caso suas credenciais sejam diferentes, altere-as no arquivo `.env`.
 
 ### 2. Configuração do Backend
 

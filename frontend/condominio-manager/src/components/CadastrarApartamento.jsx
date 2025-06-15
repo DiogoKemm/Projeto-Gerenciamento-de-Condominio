@@ -35,16 +35,16 @@ function CadastrarApartamento() {
 
     return (
         <form id="apartamentoForm" method="post" onSubmit={handleClick}>
-			<div class="mb-3">
-				<label for="nAP" class="form-label">Número do apartamento</label>
-				<input type="number" name="nAP" class="form-control" id="nAP" aria-describedby="emailHelp" min={100} max={904} />
+			<div className="mb-3">
+				<label htmlFor="nAP" className="form-label">Número do apartamento</label>
+				<input type="number" name="nAP" className="form-control" id="nAP" aria-describedby="emailHelp" min={100} max={904} />
 			</div>
-			<div class="mb-3">
-				<label for="nBloco" class="form-label">Número do bloco</label>
-				<input type="number" name="nBloco" class="form-control" id="nBloco" min={1} max={6}/>
+			<div className="mb-3">
+				<label htmlFor="nBloco" className="form-label">Número do bloco</label>
+				<input type="number" name="nBloco" className="form-control" id="nBloco" min={1} max={6}/>
 			</div>
 
-			<button type="submit" class="btn btn-primary">Cadastrar</button>
+			<button type="submit" className="btn btn-primary">Cadastrar</button>
 		</form>
     )
 }
