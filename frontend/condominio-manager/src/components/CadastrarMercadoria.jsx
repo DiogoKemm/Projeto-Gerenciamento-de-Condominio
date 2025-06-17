@@ -57,11 +57,11 @@ function CadastrarMercadoria() {
 		<form id="mercadoriaForm" method="post" onSubmit={handleClick}>
 			<div className="mb-3">
 				<label htmlFor="pedido" className="form-label">Número do pedido</label>
-				<input type="number" name="pedido" className="form-control" id="pedido" aria-describedby="emailHelp" />
+				<input type="number" name="pedido" className="form-control border border-dark" id="pedido" aria-describedby="emailHelp" />
 			</div>
 			<div className="mb-3">
 				<label htmlFor="cpf" className="form-label">CPF do morador</label>
-				<input type="text" name="cpf" className="form-control" id="cpf" />
+				<input type="text" name="cpf" className="form-control border border-dark" id="cpf" />
 			</div>
 
             {success && (

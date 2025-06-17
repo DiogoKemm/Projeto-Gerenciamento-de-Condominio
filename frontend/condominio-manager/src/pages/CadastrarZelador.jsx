@@ -35,30 +35,35 @@ const CadastrarMorador = () => {
 
 	return (
 		<div className='container-fluid'>
-			<form id="zeladorForm" method='post' onSubmit={handleClick}>
-				<div class="mb-3">
-					<label for="inputName" class="form-label">Nome</label>
-					<input type="text" name="nome" class="form-control" id="inputName" aria-describedby="emailHelp" />
+			<div className="row justify-content-center">
+				<div className="col-5">
+					<div className="card">
+						<form id="zeladorForm" method='post' onSubmit={handleClick}>
+							<div className="mb-3">
+								<label htmlFor="inputName" className="form-label">Nome</label>
+								<input type="text" name="nome" className="form-control border border-dark" id="inputName" aria-describedby="emailHelp" />
+							</div>
+							<div className="mb-3">
+								<label htmlFor="inputEmail" className="form-label">E-mail</label>
+								<input type="email" name="email" className="form-control border border-dark" id="email" />
+							</div>
+							<div className="mb-3">
+								<label htmlFor="inputCPF" className="form-label">CPF</label>
+								<input type="text" name="cpf" className="form-control border border-dark" id="inputCPF" ></input>
+							</div>
+							<div className="mb-3">
+								<label htmlFor="inputTelefone" className="form-label">Nº telefone</label>
+								<input type="tel" name="telefone" className="form-control border border-dark" id="inputTelefone" ></input>
+							</div>
+							<div className="mb-3">
+								<label htmlFor="senha" className="form-label">Senha</label>
+								<input type="password" name="passwd" className="form-control border border-dark" id="passwd" ></input>
+							</div>
+							<button type="submit" className="btn btn-primary">Cadastrar</button>
+						</form>
+					</div>
 				</div>
-				<div class="mb-3">
-					<label for="inputEmail" class="form-label">E-mail</label>
-					<input type="email" name="email" class="form-control" id="email" />
-				</div>
-				<div class="mb-3">
-					<label for="inputCPF" class="form-label">CPF</label>
-					<input type="text" name="cpf" class="form-control" id="inputCPF" ></input>
-				</div>
-				<div class="mb-3">
-					<label for="inputTelefone" class="form-label">Nº telefone</label>
-					<input type="tel" name="telefone" class="form-control" id="inputTelefone" ></input>
-				</div>
-				<div class="mb-3">
-					<label for="senha" class="form-label">Senha</label>
-					<input type="password" name="passwd" class="form-control" id="passwd" ></input>
-				</div>
-
-				<button type="submit" class="btn btn-primary">Cadastrar</button>
-			</form>
+			</div>
 		</div>
 	);
 };

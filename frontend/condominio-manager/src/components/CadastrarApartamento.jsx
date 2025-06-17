@@ -37,11 +37,11 @@ function CadastrarApartamento() {
         <form id="apartamentoForm" method="post" onSubmit={handleClick}>
 			<div className="mb-3">
 				<label htmlFor="nAP" className="form-label">Número do apartamento</label>
-				<input type="number" name="nAP" className="form-control" id="nAP" aria-describedby="emailHelp" min={100} max={904} />
+				<input type="number" name="nAP" className="form-control border border-dark" id="nAP" aria-describedby="emailHelp" min={100} max={904} />
 			</div>
 			<div className="mb-3">
 				<label htmlFor="nBloco" className="form-label">Número do bloco</label>
-				<input type="number" name="nBloco" className="form-control" id="nBloco" min={1} max={6}/>
+				<input type="number" name="nBloco" className="form-control border border-dark" id="nBloco" min={1} max={6}/>
 			</div>
 
 			<button type="submit" className="btn btn-primary">Cadastrar</button>

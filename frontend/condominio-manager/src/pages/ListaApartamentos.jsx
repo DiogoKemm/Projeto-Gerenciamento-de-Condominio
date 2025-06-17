@@ -8,16 +8,41 @@ const ListaApartamentos = () => {
   const [showForm, setShowForm] = useState(false);
 
 
-  const mostrarForm = () => {
+  const toggleForm = () => {
     setShowForm(!showForm);
   }
 
   return (
     <div className="container-fluid">
+      <div className="row justify-content-center mb-3">
+        <div className="col">
+          <button onClick={toggleForm} className={`btn ${showForm ? 'btn-secondary' : 'btn-success'}`}>
+            {showForm ? 'Ocultar formulário' : '+ Cadastrar apartamento'}
+          </button>
+        </div>
+      </div>
+      {showForm && (<div className="row justify-content-center mb-3">
+        <div className="col-lg-8 col-md-10">
+          <div className="card shadow-sm">
+            <div className="card-body">
+              <CadastrarApartamento />
+            </div>
+          </div>
+        </div>
+      </div>)}
+      <div className="row">
+        <div className="col">
+          <div className="card shadow-sm">
+            <div className="card-header">
+              <h5>Lista de apartamentos</h5>
+            </div>
+            <div className="card-body">
+              <ListaApartamentosTable />
+            </div>
+          </div>
+        </div>
 
-      <button onClick={mostrarForm}>Cadastrar apartamento</button>
-      {showForm && (<CadastrarApartamento />)}
-      <ListaApartamentosTable />
+      </div>
     </div>
   )
 };
