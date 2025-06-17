@@ -41,9 +41,8 @@ const CadastrarMorador = () => {
 				throw errorData;
 			}
 
-			// Se chegou aqui, o cadastro foi bem sucedido
 			alert("Morador cadastrado com sucesso!");
-			form.reset(); // Limpa o formulário após sucesso
+			form.reset();
 
 		} catch (err) {
 			setError("Erro ao cadastrar morador: bloco ou apartamento não existentes");

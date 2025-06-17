@@ -8,15 +8,15 @@ function CadastrarApartamento() {
 		const form = e.target;
 		const formData = new FormData(form);
 
-		let i = 0.
+		let camposVazios = 0.
 
 		for (const value of formData.values()) {
 			if (value === '') {
-				i++;
+				camposVazios++;
 			}
 		}
 
-		if (i !== 0) {
+		if (camposVazios !== 0) {
 			alert("Preencha todos os campos!");
 		} else {
 

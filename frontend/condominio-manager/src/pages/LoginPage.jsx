@@ -25,7 +25,6 @@ function Login(props) {
 				localStorage.setItem("role", response.data.role);
 				props.onLogin(response.data.role);
 			} else {
-				// falha
 				console.error("Falha na autenticação");
 			}
 		} catch (error) {

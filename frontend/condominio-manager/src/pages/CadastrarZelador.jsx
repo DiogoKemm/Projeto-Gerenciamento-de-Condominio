@@ -1,35 +1,39 @@
 import React from "react";
 import "../App.css"
 
-const CadastrarMorador = () => {
+const CadastrarZelador = () => {
 
-	function handleClick(e) {
+	async function handleClick(e) {
 		e.preventDefault();
 
 		const form = e.target;
 		const formData = new FormData(form);
 
-		let i = 0;
+		let camposVazios = 0;
 
 		for (const value of formData.values()) {
 			if (value === '') {
-				i++;
+				camposVazios++;
 			}
 		}
 
-		if (i !== 0) {
+		if (camposVazios !== 0) {
 			alert("Preencha todos os campos!");
 		} else {
+			try {
+				const token = localStorage.getItem("token");
 
-			const token = localStorage.getItem("token");
+				await fetch('http://localhost:8080/novoUsuario/', {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+					method: form.method,
+					body: formData
+				});
 
-			fetch('http://localhost:8080/novoUsuario/', {
-				headers: {
-					Authorization: `bearer ${token}`,
-				},
-				method: form.method,
-				body: formData
-			});
+			} catch (error) {
+				console.log(error)
+			}
 		}
 	};
 
@@ -68,4 +72,4 @@ const CadastrarMorador = () => {
 	);
 };
 
-export default CadastrarMorador;
+export default CadastrarZelador;

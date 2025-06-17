@@ -249,7 +249,7 @@ app.post("/CadastrarApartamento", requireJWTAuth, async (req, res) => {
 		db.none('INSERT INTO apartamento(numero, bloco) VALUES ($1, $2)', [numero, bloco]);
 	}
 	catch (error) {
-		console.log(error);
+		res.status(500).json({error: error});
 	}
 })
 
