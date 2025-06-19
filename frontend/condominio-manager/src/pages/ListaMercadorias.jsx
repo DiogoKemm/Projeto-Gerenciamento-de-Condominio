@@ -21,7 +21,7 @@ const ListaMercadorias = () => {
 
             {showForm && (
                 <div className="row justify-content-center mb-3">
-                    <div className="col-lg-8 col-md-10">
+                    <div className="col-lg-8">
                         <div className="card shadow-sm">
                             <div className="card-body">
                                 <CadastrarMercadoria />

@@ -22,7 +22,7 @@ const ListaApartamentos = () => {
         </div>
       </div>
       {showForm && (<div className="row justify-content-center mb-3">
-        <div className="col-lg-8 col-md-10">
+        <div className="col-lg-9">
           <div className="card shadow-sm">
             <div className="card-body">
               <CadastrarApartamento />

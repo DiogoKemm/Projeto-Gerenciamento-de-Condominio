@@ -36,7 +36,7 @@ function ListaApartamentosTable() {
   }
 
   return (
-      <table className="table">
+      <table className="table table-striped table-hover">
         <thead>
           <tr>
             <th scope="col">Nº</th>
@@ -56,7 +56,7 @@ function ListaApartamentosTable() {
               <td>{apartamento.telefone}</td>
               <td>{apartamento.cpf}</td>
               <td>
-                <button onClick={() => handleClick(apartamento.cpf)}>
+                <button className="btn btn-danger btn-sm" onClick={() => handleClick(apartamento.cpf)}>
                   Remover
                 </button>
               </td>
