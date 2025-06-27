@@ -7,8 +7,7 @@ const Dashboard = ({ role }) => {
     useEffect(() => {
 
         const fetchData = async () => {
-            const token = localStorage.getItem("token")
-
+            const token = sessionStorage.getItem("token")
             const data = await fetch("http://localhost:8080/countMercadorias", {
                 headers: {
                     Authorization: `bearer ${token}`,

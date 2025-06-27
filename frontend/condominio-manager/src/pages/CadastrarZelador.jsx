@@ -21,7 +21,7 @@ const CadastrarZelador = () => {
 			alert("Preencha todos os campos!");
 		} else {
 			try {
-				const token = localStorage.getItem("token");
+				const token = sessionStorage.getItem("token");
 
 				await fetch('http://localhost:8080/novoUsuario/', {
 					headers: {

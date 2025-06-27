@@ -20,7 +20,7 @@ function CadastrarApartamento() {
 			alert("Preencha todos os campos!");
 		} else {
 
-			const token = localStorage.getItem("token");
+			const token = sessionStorage.getItem("token");
 			fetch('http://localhost:8080/CadastrarApartamento/', {
 				headers: {
 					Authorization: `bearer ${token}`,

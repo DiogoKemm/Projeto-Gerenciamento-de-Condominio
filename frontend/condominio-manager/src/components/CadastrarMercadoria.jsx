@@ -26,7 +26,7 @@ function CadastrarMercadoria() {
 		}
 
 		try {
-			const token = localStorage.getItem("token"); // Corrigido para sessionStorage
+			const token = sessionStorage.getItem("token"); // Corrigido para sessionStorage
 
 			const response = await fetch('http://localhost:8080/CadastrarMercadoria/', {
 				headers: {

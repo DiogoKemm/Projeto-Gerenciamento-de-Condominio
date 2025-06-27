@@ -21,9 +21,9 @@ function Login(props) {
 			});
 
 			if (response.status >= 200 && response.status < 300) {
-				localStorage.setItem("token", response.data.token);
-				localStorage.setItem("role", response.data.role);
-				props.onLogin(response.data.role);
+				sessionStorage.setItem("token", response.data.token);
+				sessionStorage.setItem("role", response.data.role);
+				props.onLogin(response.data.role, response.data.token);
 			} else {
 				console.error("Falha na autenticação");
 			}

@@ -7,7 +7,7 @@ function ListaApartamentosTable() {
 
     const fetchData = async () => {
 
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
 
       const data = await fetch("http://localhost:8080/moradores", {
         headers: {
@@ -25,7 +25,7 @@ function ListaApartamentosTable() {
   console
 
   function handleClick(id) {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     fetch(`http://localhost:8080/moradores/${id}`, {
       headers: {
         Authorization: `bearer ${token}`,
@@ -49,7 +49,7 @@ function ListaApartamentosTable() {
         </thead>
         <tbody>
           {apartamentos.map((apartamento) => (
-            <tr key={apartamento.cpf}>
+            <tr key={`${apartamento.bloco}-${apartamento.numero}`}>
               <th scope="row">{apartamento.numero}</th>
               <td>{apartamento.bloco}</td>
               <td>{apartamento.nome}</td>

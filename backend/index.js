@@ -1,7 +1,6 @@
 require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser');
-const multer = require('multer');
 const cors = require("cors");
 const pgp = require('pg-promise')();
 const nodemailer = require('nodemailer');
@@ -20,7 +19,6 @@ const port = process.env.DB_PORT;
 const database = process.env.DB_NAME;
 const db = pgp(`postgres://${usuario}:${senha}@${host}:${port}/${database}`);
 
-const upload = multer();
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -28,7 +26,6 @@ app.set('view engine', 'pug');
 app.set('views', './views');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(upload.array());
 app.use(express.static('public'));
 
 app.use(
