@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import FiltroMoradores from "./FiltroMoradores";
 
 function ListaApartamentosTable() {
   const [apartamentos, setApartamentos] = useState([]);
+  const [apartamentosFiltrados, setApartamentosFiltrados] = useState([])
 
   useEffect(() => {
 
@@ -14,15 +16,14 @@ function ListaApartamentosTable() {
           Authorization: `bearer ${token}`,
         },
       });
-      const json = await data.json();
+      const json = await data.json();     
       setApartamentos(json);
+      setApartamentosFiltrados(json);
 
     }
 
     fetchData().catch(console.error);
-  }, [apartamentos]);
-
-  console
+  }, []);
 
   function handleClick(id) {
     const token = sessionStorage.getItem("token");
@@ -36,6 +37,8 @@ function ListaApartamentosTable() {
   }
 
   return (
+    <>
+      <FiltroMoradores mercadorias={apartamentos} onFiltrado={setApartamentosFiltrados} />
       <table className="table table-striped table-hover">
         <thead>
           <tr>
@@ -48,7 +51,7 @@ function ListaApartamentosTable() {
           </tr>
         </thead>
         <tbody>
-          {apartamentos.map((apartamento) => (
+          {apartamentosFiltrados.map((apartamento) => (
             <tr key={`${apartamento.bloco}-${apartamento.numero}`}>
               <th scope="row">{apartamento.numero}</th>
               <td>{apartamento.bloco}</td>
@@ -63,7 +66,8 @@ function ListaApartamentosTable() {
             </tr>
           ))}
         </tbody>
-    </table>
+      </table>
+    </>
   );
 }
 

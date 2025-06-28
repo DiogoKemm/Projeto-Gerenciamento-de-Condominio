@@ -7,7 +7,7 @@ const CadastrarMorador = () => {
 
 	async function handleClick(e) {
 		e.preventDefault();
-		setError(null); // Reseta o erro antes de cada submissão
+		setError(null); 
 
 		const form = e.target;
 		const formData = new FormData(form);
@@ -83,7 +83,6 @@ const CadastrarMorador = () => {
 								<input type="number" name="bloco" className="form-control" id="inputBloco" min={1} max={6}></input>
 							</div>
 
-							{/* Exibição de erro */}
 							{error && (
 								<div className="alert alert-danger" role="alert">
 									{error}

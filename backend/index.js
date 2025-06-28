@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser');
+const multer = require("multer")
 const cors = require("cors");
 const pgp = require('pg-promise')();
 const nodemailer = require('nodemailer');
@@ -20,6 +21,7 @@ const database = process.env.DB_NAME;
 const db = pgp(`postgres://${usuario}:${senha}@${host}:${port}/${database}`);
 
 const app = express();
+const upload = multer()
 app.use(cors());
 app.use(express.json());
 app.set('view engine', 'pug');
@@ -224,7 +226,7 @@ app.get("/countMercadorias", requireJWTAuth, async(req, res) => {
 	res.json(data);
 })
 
-app.post("/CadastrarMorador", requireJWTAuth, async (req, res) => {
+app.post("/CadastrarMorador", requireJWTAuth, upload.none(), async (req, res) => {
 	try {
 		const { nome, email, cpf, telefone, apartamento, bloco, papel } = req.body;
 

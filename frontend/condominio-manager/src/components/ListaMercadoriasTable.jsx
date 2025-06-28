@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import FiltroMoradores from "./FiltroMoradores";
 
 function ListaMercadoriasTable() {
   const [mercadorias, setMercadorias] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [mercadoriasFiltradas, setMercadoriasFiltradas] = useState([]);
 
   useEffect(() => {
 
@@ -15,6 +16,7 @@ function ListaMercadoriasTable() {
       });
       const json = await data.json();
       setMercadorias(json);
+      setMercadoriasFiltradas(json);
     }
 
     fetchData().catch(console.error);
@@ -32,26 +34,9 @@ function ListaMercadoriasTable() {
 
   }
 
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  // Filtro por nome
-  const filteredMercadorias = mercadorias.filter((mercadoria) => {
-    const termo = searchTerm.toLowerCase();
-    const nomeMatch = mercadoria.nome.toLowerCase().includes(termo);
-    return nomeMatch;
-  });
-
   return (
     <>
-     <input
-        type="text"
-        placeholder="Buscar por nome do morador"
-        className="form-control mb-3"
-        value={searchTerm}
-        onChange={handleSearch}
-      />
+      <FiltroMoradores mercadorias={mercadorias} onFiltrado={setMercadoriasFiltradas}/>
       <table className="table table-striped table-hover">
         <thead>
           <tr>
@@ -64,7 +49,7 @@ function ListaMercadoriasTable() {
           </tr>
         </thead>
         <tbody>
-          {filteredMercadorias.map((mercadoria) => (
+          {mercadoriasFiltradas.map((mercadoria) => (
             <tr key={mercadoria.ID}>
               <th scope="row">{mercadoria.ID}</th>
               <td>{mercadoria.apartamento_numero}</td>
