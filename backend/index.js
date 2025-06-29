@@ -283,7 +283,7 @@ app.post("/CadastrarMercadoria", requireJWTAuth, async (req, res) => {
 
 });
 
-app.post("/novoUsuario", requireJWTAuth, requireSindico, async (req, res) => {
+app.post("/novoUsuario", requireJWTAuth, requireSindico, upload.none(), async (req, res) => {
 	const saltRounds = 10;
 	try {
 		const userEmail = req.body.email;

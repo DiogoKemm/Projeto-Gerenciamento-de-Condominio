@@ -4,16 +4,15 @@ function FiltroMoradores({ mercadorias, onFiltrado }) {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearch = (e) => {
-    const termo = e.target.value.toLowerCase();
+    const termo = e.target.value;
     setSearchTerm(termo);
 
     const filtrado = mercadorias.filter((item) => {
       if (item.nome != null) {
-        const nomeMatch = item.nome.toLowerCase().includes(termo);
+        const nomeMatch = item.nome.toLowerCase().includes(termo.toLowerCase());
         return nomeMatch;
       }
     });
-
 
     onFiltrado(filtrado);
   };
