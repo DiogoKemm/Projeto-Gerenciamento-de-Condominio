@@ -13,6 +13,7 @@ const bcrypt = require("bcrypt");
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 
+// Configuração do banco de dados
 const usuario = process.env.DB_USER;
 const senha = process.env.DB_PASSWORD;
 const host = process.env.DB_HOST;
@@ -35,7 +36,7 @@ app.use(
 		secret: process.env.SESSION_SECRET,
 		resave: false,
 		saveUninitialized: false,
-		cookie: { secure: false },
+		cookie: { secure: true },
 	}),
 );
 app.use(passport.initialize());
@@ -49,29 +50,24 @@ passport.use(
 		},
 		async (username, password, done) => {
 			try {
-				// busca o usuário no banco de dados
 				const user = await db.oneOrNone(
 					"SELECT * FROM users WHERE user_id = $1;",
 					[username],
 				);
 
-				// se não encontrou, retorna erro
 				if (!user) {
 					return done(null, false, { message: "Usuário incorreto." });
 				}
 
-				// verifica se o hash da senha bate com a senha informada
 				const passwordMatch = await bcrypt.compare(
 					password,
 					user.user_password,
 				);
 
-				// se senha está ok, retorna o objeto usuário
 				if (passwordMatch) {
 					console.log("Usuário autenticado!");
 					return done(null, user);
 				} else {
-					// senão, retorna um erro
 					return done(null, false, { message: "Senha incorreta." });
 				}
 			} catch (error) {
@@ -123,6 +119,7 @@ passport.deserializeUser(function (user, cb) {
 
 const requireJWTAuth = passport.authenticate("jwt", { session: false });
 
+// Configuração do Nodemailer para envio de emails
 const transporter = nodemailer.createTransport({
 	service: 'gmail',
 	auth: {
@@ -131,8 +128,8 @@ const transporter = nodemailer.createTransport({
 	}
 });
 
+// Middleware para exigir que o usuário tenha o papel 'Sindico'
 const requireSindico = (req, res, next) => {
-	// Verifique se o usuário está autenticado e tem a role 'Sindico'
 	if (req.user.role === 'Sindico') {
 		next(); 
 	} else {
@@ -140,8 +137,8 @@ const requireSindico = (req, res, next) => {
 	}
 };
 
+// Rota de login
 app.post("/login", passport.authenticate("local", { session: false }), (req, res) => {
-	// Cria o token JWT
 	const token = jwt.sign({ username: req.user.user_id, role: req.user.role }, "your-secret-key", {
 		expiresIn: "1h",
 	});
@@ -150,10 +147,7 @@ app.post("/login", passport.authenticate("local", { session: false }), (req, res
 },
 );
 
-app.get("/", (req, res) => {
-	res.send("Welcome to the Condominio API!");
-});
-
+// Rota de logout
 app.post("/logout", function (req, res, next) {
 	req.logout(function (err) {
 		if (err) {
@@ -163,11 +157,13 @@ app.post("/logout", function (req, res, next) {
 	});
 });
 
+// Rota para buscar todos os moradores e seus apartamentos
 app.get("/moradores", requireJWTAuth, async (req, res) => {
 	const data = await db.any('SELECT * FROM morador m RIGHT JOIN apartamento a ON a.numero = m.ap_num AND a.bloco = m.ap_bloco ORDER BY nome');
 	res.json(data);
 });
 
+// Rota para deletar um morador e mercadorias associadas
 app.delete("/moradores/:id", requireJWTAuth, async (req, res) => {
 	const id = req.params.id;
 	try {
@@ -196,12 +192,14 @@ app.delete("/moradores/:id", requireJWTAuth, async (req, res) => {
 
 });
 
+// Rota para deletar uma mercadoria
 app.delete("/mercadorias/:id", requireJWTAuth, async (req, res) => {
 	const id = req.params.id;
 	await db.none('DELETE FROM mercadoria WHERE "ID" = $1', [id]);
 	res.sendStatus(200);
 });
 
+// Rota para buscar todas as mercadorias com informações do morador e apartamento
 app.get("/mercadorias", requireJWTAuth, async (req, res) => {
 	const data = await db.any(`
         SELECT 
@@ -218,6 +216,7 @@ app.get("/mercadorias", requireJWTAuth, async (req, res) => {
 	res.json(data);
 })
 
+// Rota para contar o número total de mercadorias
 app.get("/countMercadorias", requireJWTAuth, async(req, res) => {
 	const data = await db.one(`
 		SELECT
@@ -226,6 +225,7 @@ app.get("/countMercadorias", requireJWTAuth, async(req, res) => {
 	res.json(data);
 })
 
+// Rota para cadastrar um novo morador
 app.post("/CadastrarMorador", requireJWTAuth, upload.none(), async (req, res) => {
 	try {
 		const { nome, email, cpf, telefone, apartamento, bloco, papel } = req.body;
@@ -241,6 +241,7 @@ app.post("/CadastrarMorador", requireJWTAuth, upload.none(), async (req, res) =>
 	}
 });
 
+// Rota para cadastrar um novo apartamento
 app.post("/CadastrarApartamento", requireJWTAuth, async (req, res) => {
 	try {
 		const numero = req.body.nAP;
@@ -252,6 +253,7 @@ app.post("/CadastrarApartamento", requireJWTAuth, async (req, res) => {
 	}
 })
 
+// Rota para cadastrar uma nova mercadoria
 app.post("/CadastrarMercadoria", requireJWTAuth, async (req, res) => {
 	try {
 		const { pedido, cpf } = req.body;
@@ -261,13 +263,12 @@ app.post("/CadastrarMercadoria", requireJWTAuth, async (req, res) => {
 			[cpf, pedido]
 		);
 
-		// // Obter email do morador
+		// Funcionalidade de envio do email
 		// const morador = await db.one(
 		// 	'SELECT email FROM morador WHERE cpf = $1',
 		// 	[cpf]
 		// );
 
-		// // Enviar email
 		// const message = {
 		// 	from: process.env.EMAIL_USER,
 		// 	to: morador.email,
@@ -283,6 +284,7 @@ app.post("/CadastrarMercadoria", requireJWTAuth, async (req, res) => {
 
 });
 
+// Rota para criar um novo usuário (zelador), acessível apenas pelo síndico
 app.post("/novoUsuario", requireJWTAuth, requireSindico, upload.none(), async (req, res) => {
 	const saltRounds = 10;
 	try {

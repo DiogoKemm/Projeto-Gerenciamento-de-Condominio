@@ -42,7 +42,7 @@ const CadastrarZelador = () => {
 
 			setMensagem("Zelador cadastrado com sucesso!");
 			setMensagemTipo("success");
-			form.reset(); // limpa os campos
+			form.reset(); 
 
 		} catch (error) {
 			setMensagem("Erro ao cadastrar zelador. Verifique os dados e tente novamente.");

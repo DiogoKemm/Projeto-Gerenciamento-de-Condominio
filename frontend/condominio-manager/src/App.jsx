@@ -30,7 +30,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    document.body.className = '';
     switch (userRole) {
       case 'Sindico':
         document.body.style.background = 'linear-gradient(to right, #ff416c, #ff4b2b)';
@@ -41,9 +40,7 @@ function App() {
       default:
         document.body.style.background = 'linear-gradient(to right, #f2994a, #f2c94c)';
     }
-    return () => {
-      document.body.style.background = '';
-    };
+    
   }, [userRole]);
 
   const handleLogin = (role, token) => {
