@@ -7,6 +7,11 @@ function FiltroMoradores({ mercadorias, onFiltrado }) {
     const termo = e.target.value;
     setSearchTerm(termo);
 
+    if (termo.trim() === "") {
+      onFiltrado(mercadorias);
+      return;
+    }
+
     const filtrado = mercadorias.filter((item) => {
       if (item.nome != null) {
         const nomeMatch = item.nome.toLowerCase().includes(termo.toLowerCase());

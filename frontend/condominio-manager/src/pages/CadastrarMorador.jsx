@@ -41,7 +41,9 @@ const CadastrarMorador = () => {
 				throw errorData;
 			}
 
+			// Tirar este alert e botar uma box
 			alert("Morador cadastrado com sucesso!");
+			
 			form.reset();
 
 		} catch (err) {
