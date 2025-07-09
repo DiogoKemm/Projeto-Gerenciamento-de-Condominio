@@ -1,16 +1,15 @@
-import React from "react";
+import React, {useState} from "react";
 import axios from "axios";
 import '../App.css'
 
 
 function Login(props) {
 
-	const [username, setUsername] = React.useState("");
-	const [passwd, setPasswd] = React.useState("");
+	const [username, setUsername] = useState("");
+	const [passwd, setPasswd] = useState("");
 
-	const [openMessage, setOpenMessage] = React.useState(false);
-	const [messageText, setMessageText] = React.useState("");
-	const [messageSeverity, setMessageSeverity] = React.useState("success");
+	const [openMessage, setOpenMessage] = useState(false);
+	const [messageText, setMessageText] = useState("");
 
 	async function enviaLogin(event) {
 		event.preventDefault();
@@ -31,7 +30,6 @@ function Login(props) {
 			console.log(error);
 			setOpenMessage(true);
 			setMessageText("Falha ao logar usuário!");
-			setMessageSeverity("error");
 		}
 	}
 
@@ -42,7 +40,6 @@ function Login(props) {
 		}
 		setOpenMessage(true);
 		setMessageText("Login cancelado!");
-		setMessageSeverity("warning");
 	}
 
 	function handleCloseMessage(_, reason) {
@@ -82,14 +79,12 @@ function Login(props) {
 				<div className="d-flex gap-3 mb-3">
 					<button
 						className="btn btn-primary"
-						style={{ maxWidth: '100px', minWidth: '100px' }}
 						onClick={enviaLogin}
 					>
 						Enviar
 					</button>
 					<button
 						className="btn btn-outline-danger"
-						style={{ maxWidth: '100px', minWidth: '100px' }}
 						onClick={cancelaLogin}
 					>
 						Cancelar
