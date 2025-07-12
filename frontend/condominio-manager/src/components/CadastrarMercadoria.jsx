@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../App.css"
 
-function CadastrarMercadoria() {
+function CadastrarMercadoria({onAdicionado}) {
 	const [error, setError] = useState(null);
 	const [success, setSuccess] = useState(null);
 
@@ -43,6 +43,7 @@ function CadastrarMercadoria() {
 
 			setSuccess("Mercadoria cadastrada com sucesso!");
 			form.reset();
+			onAdicionado?.();
 
 		} catch (err) {
 			if (err.message == "insert or update on table \"mercadoria\" violates foreign key constraint \"mercadoria_cpf_morador_fkey\"") {

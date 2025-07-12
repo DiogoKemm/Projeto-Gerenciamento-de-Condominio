@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import ListaApartamentosTable from "../components/LIstaApartamentosTable";
 import CadastrarApartamento from "../components/CadastrarApartamento";
 import "../App.css"
@@ -6,7 +6,13 @@ import "../App.css"
 const ListaApartamentos = () => {
 
   const [showForm, setShowForm] = useState(false);
+  const tabelaRef = useRef();
 
+  const handleAdicionado = () => {
+    if (tabelaRef.current) {
+      tabelaRef.current.atualizarLista(); // chama o fetchData da tabela
+    }
+  };
 
   const toggleForm = () => {
     setShowForm(!showForm);
@@ -25,7 +31,7 @@ const ListaApartamentos = () => {
         <div className="col-lg-9">
           <div className="card shadow-sm">
             <div className="card-body">
-              <CadastrarApartamento />
+              <CadastrarApartamento onCadastrado={handleAdicionado} />
             </div>
           </div>
         </div>
@@ -37,7 +43,7 @@ const ListaApartamentos = () => {
               <h5>Lista de apartamentos</h5>
             </div>
             <div className="card-body">
-              <ListaApartamentosTable />
+              <ListaApartamentosTable ref={tabelaRef} />
             </div>
           </div>
         </div>

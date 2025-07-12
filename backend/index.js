@@ -159,7 +159,7 @@ app.post("/logout", function (req, res, next) {
 
 // Rota para buscar todos os moradores e seus apartamentos
 app.get("/moradores", requireJWTAuth, async (req, res) => {
-	const data = await db.any('SELECT * FROM morador m RIGHT JOIN apartamento a ON a.numero = m.ap_num AND a.bloco = m.ap_bloco ORDER BY nome');
+	const data = await db.any('SELECT * FROM morador m RIGHT JOIN apartamento a ON a.numero = m.ap_num AND a.bloco = m.ap_bloco ORDER BY a.bloco, a.numero');
 	res.json(data);
 });
 

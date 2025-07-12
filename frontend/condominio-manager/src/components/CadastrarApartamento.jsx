@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
 
-function CadastrarApartamento() {
+function CadastrarApartamento({onCadastrado}) {
 	const [error, setError] = useState(null);
 	const [success, setSuccess] = useState(null);
 
@@ -34,9 +34,10 @@ function CadastrarApartamento() {
 			}
 
 			setSuccess("Apartamento cadastrado com sucesso!");
-			console.log(success)
-			form.reset(); // Limpa o formulário após o sucesso
-
+			form.reset();
+			if (onCadastrado) {
+				onCadastrado()
+			}
 		} catch (err) {
 			setError(err.message);
 		}

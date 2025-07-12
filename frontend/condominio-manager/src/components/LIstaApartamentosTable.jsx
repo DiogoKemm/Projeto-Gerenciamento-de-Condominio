@@ -1,25 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useImperativeHandle, forwardRef} from "react";
 import FiltroMoradores from "./FiltroMoradores";
 
-function ListaApartamentosTable() {
+const ListaApartamentosTable = forwardRef((props, ref) => {
   const [apartamentos, setApartamentos] = useState([]);
   const [apartamentosFiltrados, setApartamentosFiltrados] = useState([])
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const token = sessionStorage.getItem("token");
-      const data = await fetch("http://localhost:8080/moradores", {
-        headers: {
-          Authorization: `bearer ${token}`,
-        },
-      });
-      const json = await data.json();
-      setApartamentos(json);
-      setApartamentosFiltrados(json);
-    }
+  const fetchData = async () => {
+    const token = sessionStorage.getItem("token");
+    const data = await fetch("http://localhost:8080/moradores", {
+      headers: {
+        Authorization: `bearer ${token}`,
+      },
+    });
+    const json = await data.json();
+    setApartamentos(json);
+    setApartamentosFiltrados(json);
+  }
 
-    fetchData().catch(console.error);
+  useEffect(() => {
+    fetchData();
   }, []);
+
+  useImperativeHandle(ref, () => ({
+    atualizarLista: fetchData,
+  }));
 
   async function handleClick(id) {
     const token = sessionStorage.getItem("token");
@@ -42,6 +46,7 @@ function ListaApartamentosTable() {
         setApartamentos((prev) => atualizarMorador(prev));
         setApartamentosFiltrados((prev) => atualizarMorador(prev));
       }
+      fetchData()
 
     } catch (error) {
       console.error("Erro na requisição DELETE:", error);
@@ -82,6 +87,6 @@ function ListaApartamentosTable() {
       </table>
     </>
   );
-}
+});
 
 export default ListaApartamentosTable;

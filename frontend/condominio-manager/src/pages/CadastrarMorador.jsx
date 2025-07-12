@@ -1,14 +1,13 @@
 import React, { useState } from "react";
-import { Box } from "@mui/material";
 import "../App.css";
 
-const CadastrarMorador = () => {
+const CadastrarMorador = ({ onCadastrado }) => {
 	const [error, setError] = useState(null);
 	const [success, setSuccess] = useState(null);
 
 	async function handleClick(e) {
 		e.preventDefault();
-		setError(null); 
+		setError(null);
 		setSuccess(null);
 
 		const form = e.target;
@@ -44,7 +43,6 @@ const CadastrarMorador = () => {
 			}
 
 			setSuccess("Morador cadastrado com sucesso!");
-			
 			form.reset();
 
 		} catch (err) {

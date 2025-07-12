@@ -1,35 +1,41 @@
-import React, { useState, useEffect } from "react";
+// components/ListaMercadoriasTable.js
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import FiltroMoradores from "./FiltroMoradores";
 
-function ListaMercadoriasTable() {
+const ListaMercadoriasTable = forwardRef((props, ref) => {
   const [mercadorias, setMercadorias] = useState([]);
   const [mercadoriasFiltradas, setMercadoriasFiltradas] = useState([]);
 
+  const fetchData = async () => {
+    const token = sessionStorage.getItem("token");
+    const res = await fetch("http://localhost:8080/mercadorias", {
+      headers: {
+        Authorization: `bearer ${token}`,
+      },
+    });
+    const json = await res.json();
+    setMercadorias(json);
+    setMercadoriasFiltradas(json);
+  };
+
   useEffect(() => {
+    fetchData();
+  }, []);
 
-    const fetchData = async () => {
-      const token = sessionStorage.getItem("token");
-      const data = await fetch("http://localhost:8080/mercadorias", {
-        headers: {
-          Authorization: `bearer ${token}`,
-        },
-      });
-      const json = await data.json();
-      setMercadorias(json);
-      setMercadoriasFiltradas(json);
-    }
-
-    fetchData().catch(console.error);
-  }, [mercadorias]);
+  // Expor o fetchData para o componente pai
+  useImperativeHandle(ref, () => ({
+    atualizarLista: fetchData,
+  }));
 
   async function handleClick(id) {
     const token = sessionStorage.getItem("token");
     await fetch(`http://localhost:8080/mercadorias/${id}`, {
+      method: "DELETE",
       headers: {
         Authorization: `bearer ${token}`,
       },
-      method: "DELETE"
-    })
+    });
+    fetchData(); // Atualiza lista após deletar
   }
 
   return (
@@ -38,26 +44,24 @@ function ListaMercadoriasTable() {
       <table className="table table-striped table-hover">
         <thead>
           <tr>
-            <th scope="col">Nº do pedido</th>
-            <th scope="col">Nº do apartamento</th>
-            <th scope="col">Bloco</th>
-            <th scope="col">Morador</th>
-            <th scope="col">Telefone</th>
-            <th scope="col">Deletar?</th>
+            <th>Nº do pedido</th>
+            <th>Nº do apartamento</th>
+            <th>Bloco</th>
+            <th>Morador</th>
+            <th>Telefone</th>
+            <th>Deletar?</th>
           </tr>
         </thead>
         <tbody>
-          {mercadoriasFiltradas.map((mercadoria) => (
-            <tr key={mercadoria.ID}>
-              <th scope="row">{mercadoria.ID}</th>
-              <td>{mercadoria.apartamento_numero}</td>
-              <td>{mercadoria.bloco}</td>
-              <td>{mercadoria.nome}</td>
-              <td>{mercadoria.telefone}</td>
+          {mercadoriasFiltradas.map((m) => (
+            <tr key={m.ID}>
+              <td>{m.ID}</td>
+              <td>{m.apartamento_numero}</td>
+              <td>{m.bloco}</td>
+              <td>{m.nome}</td>
+              <td>{m.telefone}</td>
               <td>
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => handleClick(mercadoria.ID)}>
+                <button className="btn btn-danger btn-sm" onClick={() => handleClick(m.ID)}>
                   Deletar
                 </button>
               </td>
@@ -66,8 +70,7 @@ function ListaMercadoriasTable() {
         </tbody>
       </table>
     </>
-  )
-
-}
+  );
+});
 
 export default ListaMercadoriasTable;
