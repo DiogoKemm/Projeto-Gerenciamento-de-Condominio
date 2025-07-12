@@ -7,26 +7,26 @@ function CadastrarMercadoria() {
 
 	async function handleClick(e) {
 		e.preventDefault();
-		setError(null); // Limpa erros anteriores
-		setSuccess(null); // Limpa mensagens de sucesso anteriores
+		setError(null);
+		setSuccess(null); 
 
 		const form = e.target;
 		const formData = new FormData(form);
 
-		let i = 0;
+		let camposVazios = 0;
 		for (const value of formData.values()) {
 			if (value === '') {
-				i++;
+				camposVazios++;
 			}
 		}
 
-		if (i !== 0) {
+		if (camposVazios !== 0) {
 			setError("Preencha todos os campos!");
 			return;
 		}
 
 		try {
-			const token = sessionStorage.getItem("token"); // Corrigido para sessionStorage
+			const token = sessionStorage.getItem("token"); 
 
 			const response = await fetch('http://localhost:8080/CadastrarMercadoria/', {
 				headers: {
@@ -57,7 +57,7 @@ function CadastrarMercadoria() {
 		<form id="mercadoriaForm" method="post" onSubmit={handleClick}>
 			<div className="row">
 				<div className="col">
-					<input type="number" name="pedido" className="form-control border border-dark" id="pedido" placeholder="Número do pedido" />
+					<input type="number" min={1} name="pedido" className="form-control border border-dark" id="pedido" placeholder="Número do pedido" />
 				</div>
 				<div className="col">
 					<input type="text" name="cpf" className="form-control border border-dark" id="cpf" placeholder="CPF" />

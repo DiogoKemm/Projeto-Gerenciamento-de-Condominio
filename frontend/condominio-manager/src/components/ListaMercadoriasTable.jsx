@@ -20,23 +20,21 @@ function ListaMercadoriasTable() {
     }
 
     fetchData().catch(console.error);
-  }, []);
+  }, [mercadorias]);
 
-  const handleClick = id => {
+  async function handleClick(id) {
     const token = sessionStorage.getItem("token");
-    fetch(`http://localhost:8080/mercadorias/${id}`, {
+    await fetch(`http://localhost:8080/mercadorias/${id}`, {
       headers: {
         Authorization: `bearer ${token}`,
       },
       method: "DELETE"
     })
-      .then(response => response.json(id));
-
   }
 
   return (
     <>
-      <FiltroMoradores mercadorias={mercadorias} onFiltrado={setMercadoriasFiltradas}/>
+      <FiltroMoradores mercadorias={mercadorias} onFiltrado={setMercadoriasFiltradas} />
       <table className="table table-striped table-hover">
         <thead>
           <tr>
@@ -57,10 +55,10 @@ function ListaMercadoriasTable() {
               <td>{mercadoria.nome}</td>
               <td>{mercadoria.telefone}</td>
               <td>
-                <button 
-                  className="btn btn-danger btn-sm" 
+                <button
+                  className="btn btn-danger btn-sm"
                   onClick={() => handleClick(mercadoria.ID)}>
-                    Deletar
+                  Deletar
                 </button>
               </td>
             </tr>

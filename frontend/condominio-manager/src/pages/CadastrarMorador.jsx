@@ -4,10 +4,12 @@ import "../App.css";
 
 const CadastrarMorador = () => {
 	const [error, setError] = useState(null);
+	const [success, setSuccess] = useState(null);
 
 	async function handleClick(e) {
 		e.preventDefault();
 		setError(null); 
+		setSuccess(null);
 
 		const form = e.target;
 		const formData = new FormData(form);
@@ -41,13 +43,15 @@ const CadastrarMorador = () => {
 				throw errorData;
 			}
 
-			// Tirar este alert e botar uma box
-			alert("Morador cadastrado com sucesso!");
+			setSuccess("Morador cadastrado com sucesso!");
 			
 			form.reset();
 
 		} catch (err) {
-			setError("Erro ao cadastrar morador: bloco ou apartamento não existentes");
+			console.log(err)
+			if (err == "value too long for type character varying(11)") {
+				setError("Digite o CPF corretamente")
+			}
 
 		}
 	};
@@ -64,7 +68,7 @@ const CadastrarMorador = () => {
 									<input type="text" name="nome" className="form-control" id="inputName" aria-describedby="emailHelp" />
 								</div>
 								<div className="col mb-3">
-									<label htmlFor="inputCPF" className="form-label">CPF</label>
+									<label htmlFor="inputCPF" className="form-label">CPF (Só números)</label>
 									<input type="text" name="cpf" className="form-control" id="inputCPF"></input>
 								</div>
 							</div>
@@ -88,6 +92,12 @@ const CadastrarMorador = () => {
 							{error && (
 								<div className="alert alert-danger" role="alert">
 									{error}
+								</div>
+							)}
+
+							{success && (
+								<div className="alert alert-success" role="success">
+									{success}
 								</div>
 							)}
 

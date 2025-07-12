@@ -236,17 +236,17 @@ app.post("/CadastrarMorador", requireJWTAuth, upload.none(), async (req, res) =>
 		);
 		res.sendStatus(201);
 	} catch (error) {
-		console.error(error);
-		res.status(500).json({ error: "Erro ao cadastrar morador" });
+		res.status(500).json(error.message);
 	}
 });
 
 // Rota para cadastrar um novo apartamento
-app.post("/CadastrarApartamento", requireJWTAuth, async (req, res) => {
+app.post("/CadastrarApartamento", upload.none(), requireJWTAuth, async (req, res) => {
 	try {
 		const numero = req.body.nAP;
 		const bloco = req.body.nBloco;
-		db.none('INSERT INTO apartamento(numero, bloco) VALUES ($1, $2)', [numero, bloco]);
+		await db.none('INSERT INTO apartamento(numero, bloco) VALUES ($1, $2)', [numero, bloco]);
+		res.sendStatus(201)
 	}
 	catch (error) {
 		res.status(500).json({error: error});
@@ -254,7 +254,7 @@ app.post("/CadastrarApartamento", requireJWTAuth, async (req, res) => {
 })
 
 // Rota para cadastrar uma nova mercadoria
-app.post("/CadastrarMercadoria", requireJWTAuth, async (req, res) => {
+app.post("/CadastrarMercadoria", upload.none(), requireJWTAuth, async (req, res) => {
 	try {
 		const { pedido, cpf } = req.body;
 

@@ -23,13 +23,8 @@ function FiltroMoradores({ mercadorias, onFiltrado }) {
   };
 
   return (
-    <input
-      type="text"
-      placeholder="Buscar por nome do morador"
-      className="form-control mb-3"
-      value={searchTerm}
-      onChange={handleSearch}
-    />
+    <input type="text" placeholder="Buscar por nome do morador" className="form-control mb-3" value={searchTerm} 
+    onChange={handleSearch}/>
   );
 }
 

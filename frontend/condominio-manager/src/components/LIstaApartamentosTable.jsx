@@ -6,35 +6,48 @@ function ListaApartamentosTable() {
   const [apartamentosFiltrados, setApartamentosFiltrados] = useState([])
 
   useEffect(() => {
-
     const fetchData = async () => {
-
       const token = sessionStorage.getItem("token");
-
       const data = await fetch("http://localhost:8080/moradores", {
         headers: {
           Authorization: `bearer ${token}`,
         },
       });
-      const json = await data.json();     
+      const json = await data.json();
       setApartamentos(json);
       setApartamentosFiltrados(json);
-
     }
 
     fetchData().catch(console.error);
   }, []);
 
-  function handleClick(id) {
+  async function handleClick(id) {
     const token = sessionStorage.getItem("token");
-    fetch(`http://localhost:8080/moradores/${id}`, {
-      headers: {
-        Authorization: `bearer ${token}`,
-      },
-      method: "DELETE"
-    })
-      .then(response => response.json(id));
+    try {
+      const response = await fetch(`http://localhost:8080/moradores/${id}`, {
+        headers: {
+          Authorization: `bearer ${token}`,
+        },
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        const atualizarMorador = (lista) =>
+          lista.map((m) =>
+            m.cpf === id
+              ? { ...m, nome: "", telefone: "", cpf: "" }
+              : m
+          );
+
+        setApartamentos((prev) => atualizarMorador(prev));
+        setApartamentosFiltrados((prev) => atualizarMorador(prev));
+      }
+
+    } catch (error) {
+      console.error("Erro na requisição DELETE:", error);
+    }
   }
+
 
   return (
     <>

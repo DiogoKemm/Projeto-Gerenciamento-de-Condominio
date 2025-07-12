@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function Navbar({ userRole, onLogout }) {
+function Navbar({ userRole, onLogout }) {
   const navigate = useNavigate();
 
   return (
@@ -18,3 +18,5 @@ export default function Navbar({ userRole, onLogout }) {
     </div>
   );
 }
+
+export default Navbar;
