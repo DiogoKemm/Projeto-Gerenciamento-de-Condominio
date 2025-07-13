@@ -36,17 +36,8 @@ const ListaApartamentosTable = forwardRef((props, ref) => {
       });
 
       if (response.ok) {
-        const atualizarMorador = (lista) =>
-          lista.map((m) =>
-            m.cpf === id
-              ? { ...m, nome: "", telefone: "", cpf: "" }
-              : m
-          );
-
-        setApartamentos((prev) => atualizarMorador(prev));
-        setApartamentosFiltrados((prev) => atualizarMorador(prev));
+        await fetchData();
       }
-      fetchData()
 
     } catch (error) {
       console.error("Erro na requisição DELETE:", error);

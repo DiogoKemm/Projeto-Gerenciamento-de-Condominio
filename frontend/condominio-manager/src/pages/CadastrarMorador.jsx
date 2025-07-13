@@ -13,15 +13,7 @@ const CadastrarMorador = ({ onCadastrado }) => {
 		const form = e.target;
 		const formData = new FormData(form);
 
-		// Verifica campos vazios
-		let camposVazios = 0;
-		for (const value of formData.values()) {
-			if (value === '') {
-				camposVazios++;
-			}
-		}
-
-		if (camposVazios !== 0) {
+		if (!formData.get("inputName") || !formData.get("inputCPF") || !formData.get("inputApartamento") || !formData.get("inputBloco")) {
 			setError("Preencha todos os campos!");
 			return;
 		}
@@ -46,7 +38,6 @@ const CadastrarMorador = ({ onCadastrado }) => {
 			form.reset();
 
 		} catch (err) {
-			console.log(err)
 			if (err == "value too long for type character varying(11)") {
 				setError("Digite o CPF corretamente")
 			}

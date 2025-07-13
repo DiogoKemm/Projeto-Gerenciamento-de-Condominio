@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
 
-function CadastrarApartamento({onCadastrado}) {
+function CadastrarApartamento({ onCadastrado }) {
 	const [error, setError] = useState(null);
 	const [success, setSuccess] = useState(null);
 
@@ -29,17 +29,18 @@ function CadastrarApartamento({onCadastrado}) {
 			});
 
 			if (!response.ok) {
-				const data = await response.text();
-				throw new Error(data || "Erro ao cadastrar apartamento");
+				const errorData = await response.json();
+				throw errorData;
 			}
 
 			setSuccess("Apartamento cadastrado com sucesso!");
-			form.reset();
 			if (onCadastrado) {
 				onCadastrado()
 			}
+			form.reset();
+
 		} catch (err) {
-			setError(err.message);
+			setError("Apartamento já cadastrado")
 		}
 	}
 
@@ -47,24 +48,12 @@ function CadastrarApartamento({onCadastrado}) {
 		<form id="apartamentoForm" method="post" onSubmit={handleSubmit}>
 			<div className="row">
 				<div className="col">
-					<input
-						type="number"
-						name="nAP"
-						className="form-control border border-dark"
-						placeholder="Número do apartamento"
-						min={100}
-						max={904}
-					/>
+					<input type="number" name="nAP" className="form-control border border-dark" placeholder="Número do apartamento"
+						min={100} max={904} />
 				</div>
 				<div className="col">
-					<input
-						type="number"
-						name="nBloco"
-						className="form-control border border-dark"
-						placeholder="Número do bloco"
-						min={1}
-						max={6}
-					/>
+					<input type="number" name="nBloco" className="form-control border border-dark" placeholder="Número do bloco"
+						min={1} max={6} />
 				</div>
 			</div>
 

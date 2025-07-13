@@ -13,14 +13,7 @@ function CadastrarMercadoria({onAdicionado}) {
 		const form = e.target;
 		const formData = new FormData(form);
 
-		let camposVazios = 0;
-		for (const value of formData.values()) {
-			if (value === '') {
-				camposVazios++;
-			}
-		}
-
-		if (camposVazios !== 0) {
+		if (!formData.get("pedido") || !formData.get("cpf")) {
 			setError("Preencha todos os campos!");
 			return;
 		}
